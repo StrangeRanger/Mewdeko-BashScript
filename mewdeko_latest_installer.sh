@@ -47,7 +47,7 @@ cd Mewdeko_tmp || {
 
 echo "Downloading Mewdeko into 'Mewdeko_tmp'..."
 # Download Mewdeko from a specified branch/tag.
-git clone -b "$_NADEKO_INSTALL_VERSION" --recursive --depth 1 \
+git clone -b "$_MEWDEKO_INSTALL_VERSION" --recursive --depth 1 \
         https://github.com/Sylveon76/Mewdeko || {
     echo "${_RED}Failed to download Mewdeko$_NC" >&2
     exit 1
