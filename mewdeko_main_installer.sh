@@ -200,8 +200,8 @@ while true; do
 
 
     ## Dotnet version.
-    dotnet_version=$(dotnet --version)     # Version: x.x.x
-    dotnet_version=${dotnet_version//.*/}  # Version: x
+    dotnet_version=$(dotnet --version) 2>/dev/null     # Version: x.x.x
+    dotnet_version=${dotnet_version//.*/} 2>/dev/null  # Version: x
 
     # TODO: store version of java
 
