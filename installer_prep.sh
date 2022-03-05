@@ -146,8 +146,7 @@ clean_up() {
 
     # Files to be removed.
     local installer_files=("installer_prep.sh" "prereqs_installer.sh"
-        "nadeko_latest_installer.sh" "nadeko_runner.sh" "mewdeko_main_installer.sh"
-        "file_backup.sh")
+        "mewdeko_latest_installer.sh" "mewdeko_main_installer.sh")
 
     if [[ $3 = true ]]; then echo "Cleaning up..."
     else                     echo -e "\nCleaning up..."
@@ -162,7 +161,7 @@ clean_up() {
     ## EXPLANATION: 'mewdeko_tmp' contains a newly downloaded version of Mewdeko. If
     ##              the installer is stopped while downloading Mewdeko, this directory
     ##              will remain on the system, if this if statement doesn't exist.
-    if [[ -d mewdeko_tmp ]]; then rm -rf mewdeko_tmp
+    if [[ -d Mewdeko_tmp ]]; then rm -rf Mewdeko_tmp
     fi
 
     ## Remove any and all files specified in $installer_files.

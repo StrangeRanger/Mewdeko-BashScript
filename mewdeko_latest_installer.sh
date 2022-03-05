@@ -115,10 +115,10 @@ if [[ -d Mewdeko_tmp/Mewdeko && -d Mewdeko ]]; then
     # Restore new strings.
     mv -f "$new_data"/strings_new "$new_data"/strings
 
-    rm -rf nadekobot_old && mv -f nadekobot nadekobot_old
+    rm -rf Mewdeko_old && mv -f Mewdeko Mewdeko_old
 fi
 
-mv Mewdeko_tmp/nadekobot . && rmdir Mewdeko_tmp
+mv Mewdeko_tmp/Mewdeko_old . && rmdir Mewdeko_tmp
 
 
 #### End of [[ Create Backup, Then Update ]]
