@@ -97,7 +97,7 @@ elif [[ $_DISTRO = "debian" ]]; then
 
             ## Install Java.
             echo "Installing Java 13..."
-            sudo apt install openjdk-13-jdk
+            sudo apt install openjdk-13-jdk -y
 
             ## Other prerequisites.
             echo "Installing other prerequisites..."

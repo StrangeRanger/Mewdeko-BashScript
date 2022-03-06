@@ -145,7 +145,8 @@ disabled_reasons() {
     if (! hash dotnet \
             || ! hash java \
             || [[ $ccze_installed = false ]] \
-            || [[ $dotnet_version != "$req_dotnet_version" ]]) &>/dev/null; then
+            || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]] \
+            || [[ ${java_version:-false} != "$req_java_version" ]]) &>/dev/null; then
         echo "  One or more prerequisites are not installed"
         echo "    Use option 6 to install prerequisites"
     fi
@@ -205,7 +206,11 @@ while true; do
         dotnet_version=${dotnet_version//.*/}  # Version: x
     fi
 
-    # TODO: store version of java
+    if hash java &>/dev/null; then
+        ## Java version
+        java_version=$(javac -version | awk '{print $2}')
+        java_version=${java_version//.*/}
+    fi
 
 
     #### End of [[ Variable Checks ]]
@@ -224,7 +229,8 @@ while true; do
     if (! hash dotnet \
             || ! hash java \
             || [[ $ccze_installed = false ]] \
-            || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]]) &>/dev/null; then
+            || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]] \
+            || [[ ${java_version:-false} != "$req_java_version" ]]) &>/dev/null; then
         option_one_disabled=true
         option_one_text="${_GREY}${option_one_text}${disabled_option}${_NC}"
     fi
