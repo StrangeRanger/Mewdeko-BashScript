@@ -199,9 +199,11 @@ while true; do
     #### or program, that has the possiblity of changing every time the while loop runs.
 
 
-    ## Dotnet version.
-    dotnet_version=$(dotnet --version) 2>/dev/null     # Version: x.x.x
-    dotnet_version=${dotnet_version//.*/} 2>/dev/null  # Version: x
+    if hash dotnet; then
+        ## Dotnet version.
+        dotnet_version=$(dotnet --version)     # Version: x.x.x
+        dotnet_version=${dotnet_version//.*/}  # Version: x
+    fi
 
     # TODO: store version of java
 
@@ -222,7 +224,7 @@ while true; do
     if (! hash dotnet \
             || ! hash java \
             || [[ $ccze_installed = false ]] \
-            || [[ $dotnet_version != "$req_dotnet_version" ]]) &>/dev/null; then
+            || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]]) &>/dev/null; then
         option_one_disabled=true
         option_one_text="${_GREY}${option_one_text}${disabled_option}${_NC}"
     fi
