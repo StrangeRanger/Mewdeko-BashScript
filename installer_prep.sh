@@ -146,7 +146,7 @@ clean_up() {
 
     # Files to be removed.
     local installer_files=("installer_prep.sh" "prereqs_installer.sh"
-        "mewdeko_latest_installer.sh" "mewdeko_main_installer.sh")
+        "mewdeko_latest_installer.sh" "mewdeko_runner.sh" "mewdeko_main_installer.sh")
 
     if [[ $3 = true ]]; then echo "Cleaning up..."
     else                     echo -e "\nCleaning up..."
