@@ -199,7 +199,7 @@ while true; do
     #### or program, that has the possiblity of changing every time the while loop runs.
 
 
-    if hash dotnet; then
+    if hash dotnet &>/dev/null; then
         ## Dotnet version.
         dotnet_version=$(dotnet --version)     # Version: x.x.x
         dotnet_version=${dotnet_version//.*/}  # Version: x
