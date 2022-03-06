@@ -152,7 +152,7 @@ disabled_reasons() {
     fi
 
     if [[ -d Mewdeko ]]; then
-        if [[ ! -f Mewdeko/src/Mewdeko/credentials.json ]]; then
+        if [[ ! -f Mewdeko/src/Mewdeko/bin/Release/net6.0/credentials.json ]]; then
             echo "  The 'credentials.json' could not be found"
             echo "    Refer to the following link for help: !!!INSERT NEW URL!!!"
         fi
@@ -237,7 +237,7 @@ while true; do
 
     ## Disable options 2, 3, and 5 if any of the tools in the previous if statement are
     ## not installed, or none of the specified directories/files could be found.
-    if [[ ! -f Mewdeko/src/Mewdeko/credentials.json \
+    if [[ ! -f Mewdeko/src/Mewdeko/bin/Release/net6.0/credentials.json \
             || $option_one_disabled = true ]]; then
         ## Options 2 & 3.
         option_two_and_three_disabled=true
