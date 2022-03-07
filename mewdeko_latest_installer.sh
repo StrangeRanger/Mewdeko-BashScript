@@ -70,8 +70,8 @@ fi
 echo "Building Mewdeko..."
 {
     cd Mewdeko/src/Mewdeko \
-    && dotnet build -c Release \
-    && cd "$_WORKING_DIR"
+        && dotnet build -c Release \
+        && cd "$_WORKING_DIR"
 } || {
     echo "${_RED}Failed to build Mewdeko$_NC" >&2
     exit 1

@@ -70,19 +70,20 @@ unsupported() {
 read -rp "We will now install Mewdeko's prerequisites. Press [Enter] to continue."
 
 # Ubuntu:
-#   16.04
-#   18.04
 #   20.04
+#   18.04
+#   16.04
 if [[ $_DISTRO = "ubuntu" ]]; then
     case "$_VER" in
-        16.04|18.04|20.04) install_prereqs "ubuntu" "$_VER" "python" ;;
+        20.04|18.04|16.04) install_prereqs "ubuntu" "$_VER" ;;
         *)                 unsupported ;;
     esac
 # Debian:
-#   9
 #   10
+#   9
 elif [[ $_DISTRO = "debian" ]]; then
     case "$_SVER" in
+        10) install_prereqs "debian" "10";;
         9)
             echo "Installing .NET Core..."
             ## Microsoft package signing key.
@@ -104,22 +105,26 @@ elif [[ $_DISTRO = "debian" ]]; then
             echo "Installing Java 13..."
             sudo apt install openjdk-13-jdk -y
 
+            ## Add keydb source.
+            echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/keydb.list
+            sudo wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg
+
             ## Other prerequisites.
             echo "Installing other prerequisites..."
-            sudo apt-get install ffmpeg redis-server git ccze -y
+            sudo apt-get update
+            sudo apt-get install keydb git ccze -y
             ;;
-        10) install_prereqs "debian" "10";;
         *)  unsupported ;;
     esac
 # Linux Mint:
-#   18
-#   19
 #   20
+#   19
+#   18
 elif [[ $_DISTRO = "linuxmint" ]]; then
     case "$_SVER" in
-        18) install_prereqs "ubuntu" "16.04" ;;
-        19) install_prereqs "ubuntu" "18.04" ;;
         20) install_prereqs "ubuntu" "20.04" ;;
+        19) install_prereqs "ubuntu" "18.04" ;;
+        18) install_prereqs "ubuntu" "16.04" ;;
         *)  unsupported ;;
     esac
 fi

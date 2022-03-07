@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# The master/main installer for macOS and Linux Distributions.
+# The master/main installer for Linux Distributions.
 #
 # Comment key:
 #   A.1. - Return to prevent further code execution.
@@ -154,7 +154,7 @@ disabled_reasons() {
     if [[ -d Mewdeko ]]; then
         if [[ ! -f Mewdeko/src/Mewdeko/credentials.json ]]; then
             echo "  The 'credentials.json' could not be found"
-            echo "    Refer to the following link for help: !!!INSERT NEW URL!!!"
+            echo "    Refer to the following link for help: https://mewdeko.tech/"
         fi
     else
         echo "  Mewdeko could not be found"
