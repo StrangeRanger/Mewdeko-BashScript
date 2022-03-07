@@ -90,8 +90,12 @@ if [[ $_CODENAME = "MewdekoRun" ]]; then
         "" \
         "echo \"Running Mewdeko in the background\"" \
         "echo \"Starting Mewdeko...\"" \
-        "cd $_WORKING_DIR/Mewdeko/src/Mewdeko/bin/Release/net6.0" \
-        "dotnet Mewdeko.dll" \
+        "cd $_WORKING_DIR/Mewdeko/src/Mewdeko" \
+        "dotnet build -c Release || {" \
+        "    echo \"An error occurred when trying to start Mewdeko\"" \
+        "    echo \"Exiting...\"" \
+        "    exit 1" \
+        "}" \
         "echo \"Stopping Mewdeko...\"" \
         "cd $_WORKING_DIR" > MewdekoRun.sh
 ## Add code required to run Mewdeko in the background with auto restart, to
@@ -106,19 +110,19 @@ else
         "echo \"Starting Mewdeko...\"" \
         "" \
         "while true; do" \
-        "    if [[ -d $_WORKING_DIR/Mewdeko/src/Mewdeko/bin/Release/net6.0 ]]; then" \
-        "        cd $_WORKING_DIR/Mewdeko/src/Mewdeko/bin/Release/net6.0 || {" \
-        "            echo \"Failed to change working directory to '$_WORKING_DIR/Mewdeko/src/Mewdeko/bin/Release/net6.0'\" >&2" \
+        "    if [[ -d $_WORKING_DIR/Mewdeko/src/Mewdeko ]]; then" \
+        "        cd $_WORKING_DIR/Mewdeko/src/Mewdeko || {" \
+        "            echo \"Failed to change working directory to '$_WORKING_DIR/Mewdeko/src/Mewdeko'\" >&2" \
         "            echo \"Ensure that the working directory inside of '/etc/systemd/system/nadeko.service' is correct\"" \
         "            echo \"Exiting...\"" \
         "            exit 1" \
         "        }" \
         "    else" \
-        "        echo \"'$_WORKING_DIR/Mewdeko/src/Mewdeko/bin/Release/net6.0' doesn't exist\"" \
+        "        echo \"'$_WORKING_DIR/Mewdeko/src/Mewdeko' doesn't exist\"" \
         "        exit 1" \
         "    fi" \
         "" \
-        "    dotnet Mewdeko.dll || {" \
+        "    dotnet build -c Release || {" \
         "        echo \"An error occurred when trying to start Mewdeko\"" \
         "        echo \"Exiting...\"" \
         "        exit 1" \
