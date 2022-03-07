@@ -91,7 +91,7 @@ if [[ $_CODENAME = "MewdekoRun" ]]; then
         "echo \"Running Mewdeko in the background\"" \
         "echo \"Starting Mewdeko...\"" \
         "cd $_WORKING_DIR/Mewdeko/src/Mewdeko" \
-        "dotnet build -c Release || {" \
+        "dotnet run -c Release || {" \
         "    echo \"An error occurred when trying to start Mewdeko\"" \
         "    echo \"Exiting...\"" \
         "    exit 1" \
@@ -122,7 +122,7 @@ else
         "        exit 1" \
         "    fi" \
         "" \
-        "    dotnet build -c Release || {" \
+        "    dotnet run -c Release || {" \
         "        echo \"An error occurred when trying to start Mewdeko\"" \
         "        echo \"Exiting...\"" \
         "        exit 1" \
