@@ -37,14 +37,15 @@ install_prereqs() {
 
     ## Install Java.
     echo "Installing Java 13..."
-    sudo apt install openjdk-13-jdk
-    ## Add keydb source
+    sudo apt-get install -y openjdk-13-jdk
+
+    ## Add keydb source.
     echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/keydb.list
     sudo wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg
-    ## Run apt update to refresh sources
-    sudo apt update
+
     ## Other prerequisites.
     echo "Installing other prerequisites..."
+    sudo apt-get update
     sudo apt-get install keydb git ccze -y
 }
 
