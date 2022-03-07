@@ -6,8 +6,8 @@
 #### [ Variables ]
 
 
-current_creds="Mewdeko/src/Mewdeko/credentials.json"
-new_creds="Mewdeko_tmp/Mewdeko/src/Mewdeko/credentials.json"
+current_creds="Mewdeko/src/Mewdeko/bin/Release/net6.0/credentials.json"
+new_creds="Mewdeko_tmp/Mewdeko/src/Mewdeko/bin/Release/net6.0/credentials.json"
 current_database="Mewdeko/src/Mewdeko/bin/Release/net6.0/data/Mewdeko.db"
 new_database="Mewdeko_tmp/Mewdeko/src/Mewdeko/bin/Release/net6.0/data/Mewdeko.db"
 current_data="Mewdeko/src/Mewdeko/data"
