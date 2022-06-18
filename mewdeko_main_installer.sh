@@ -17,9 +17,9 @@ export _MEWDEKO_MASTER_INSTALLER_PID=$$
 _MEWDEKO_SERVICE_NAME="mewdeko.service"
 _MEWDEKO_SERVICE="/etc/systemd/system/$_MEWDEKO_SERVICE_NAME"
 
-## Indicates which major version of Dotnet and Java is required.
+## Indicates which major version of Dotnet and Java (minimum) is required.
 req_dotnet_version="6"
-req_java_version="13"
+req_min_java_version="11"
 
 
 #### End of [ Variables ]
@@ -146,7 +146,7 @@ disabled_reasons() {
             || ! hash java \
             || [[ $ccze_installed = false ]] \
             || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]] \
-            || [[ ${java_version:-false} != "$req_java_version" ]]) &>/dev/null; then
+            || [[ ${java_version:-false} < "$req_min_java_version" ]]) &>/dev/null; then
         echo "  One or more prerequisites are not installed"
         echo "    Use option 6 to install prerequisites"
     fi
@@ -230,7 +230,7 @@ while true; do
             || ! hash java \
             || [[ $ccze_installed = false ]] \
             || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]] \
-            || [[ ${java_version:-false} != "$req_java_version" ]]) &>/dev/null; then
+            || [[ ${java_version:-false} < "$req_min_java_version" ]]) &>/dev/null; then
         option_one_disabled=true
         option_one_text="${_GREY}${option_one_text}${disabled_option}${_NC}"
     fi
