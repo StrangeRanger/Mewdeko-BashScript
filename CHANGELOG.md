@@ -14,9 +14,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- Now installs Java 17 or Java 11 (dependent on distribution) instead of Java 13.
-- Removed support for Ubuntu 16.04.
-- Removed support of Linux Mint 18 due to EOL.
+- ⚠️ Now installs Java 17 or Java 11 (dependent on distribution) instead of Java 13.
+- ⚠️ Removed support for Ubuntu 16.04.
+- ⚠️ Removed support of Linux Mint 18 due to EOL.
 
 ## [1.0.0] 2022-03-07
 
