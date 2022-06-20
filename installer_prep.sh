@@ -43,6 +43,7 @@ export _CLRLN=$'\r\033[K'
 #### [ Functions ]
 
 
+# shellcheck disable=SC1091
 detect_sys_info() {
     ####
     # Function Info: Identify the operating system, version number, architecture, bit
@@ -69,6 +70,8 @@ detect_sys_info() {
     esac
 }
 
+# TODO: Add error checking to sed... If they fail, print the tracked variables into
+#       a new file.
 linuxAIO_update() {
     ####
     # Function Info: Download the latest version of 'linuxAIO.sh' if $_LINUXAIO_REVISION
@@ -263,30 +266,30 @@ Distro Version: $_VER
 ### Check if the operating system is supported by Mewdeko and installer.
 if [[ $bits = 64 ]]; then
     # Ubuntu:
+    #   22.04
     #   20.04
     #   18.04
-    #   16.04
     if [[ $_DISTRO = "ubuntu" ]]; then
         case "$_VER" in
-            16.04|18.04|20.04) execute_main_installer ;;
+            18.04|20.04|22.04) execute_main_installer ;;
             *)                 unsupported ;;
         esac
     # Debian:
+    #   11
     #   10
     #   9
     elif [[ $_DISTRO = "debian" ]]; then
         case "$_SVER" in
-            9|10) execute_main_installer ;;
-            *)    unsupported ;;
+            9|10|11) execute_main_installer ;;
+            *)       unsupported ;;
         esac
     # Linux Mint:
     #   20
     #   19
-    #   18
     elif [[ $_DISTRO = "linuxmint" ]]; then
         case "$_SVER" in
-            18|19|20) execute_main_installer ;;
-            *)        unsupported ;;
+            19|20) execute_main_installer ;;
+            *)     unsupported ;;
         esac
     else
         unsupported

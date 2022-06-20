@@ -21,6 +21,7 @@ install_prereqs() {
     # Parameters:
     # 	$1 - Distribution name.
     # 	$2 - Distribution version.
+    #   $3 - OpenJDK version
     ####
 
     echo "Installing .NET Core..."
@@ -36,17 +37,13 @@ install_prereqs() {
         && sudo apt-get install -y dotnet-sdk-6.0
 
     ## Install Java.
-    echo "Installing Java 13..."
-    sudo apt-get install -y openjdk-13-jdk
-
-    ## Add keydb source.
-    echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/keydb.list
-    sudo wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg
+    echo "Installing '$3'..."
+    sudo apt-get install -y "$3"
 
     ## Other prerequisites.
     echo "Installing other prerequisites..."
     sudo apt-get update
-    sudo apt-get install keydb git ccze -y
+    sudo apt-get install redis-server git ccze -y
 }
 
 unsupported() {
@@ -70,20 +67,22 @@ unsupported() {
 read -rp "We will now install Mewdeko's prerequisites. Press [Enter] to continue."
 
 # Ubuntu:
+#   22.04
 #   20.04
 #   18.04
-#   16.04
 if [[ $_DISTRO = "ubuntu" ]]; then
     case "$_VER" in
-        20.04|18.04|16.04) install_prereqs "ubuntu" "$_VER" ;;
+        18.04|20.04|22.04) install_prereqs "ubuntu" "$_VER" "openjdk-17-jdk" ;;
         *)                 unsupported ;;
     esac
 # Debian:
+#   11
 #   10
 #   9
 elif [[ $_DISTRO = "debian" ]]; then
     case "$_SVER" in
-        10) install_prereqs "debian" "10";;
+        11) install_prereqs "debian" "11" "openjdk-17-jdk" ;;
+        10) install_prereqs "debian" "10" "openjdk-11-jdk" ;;
         9)
             echo "Installing .NET Core..."
             ## Microsoft package signing key.
@@ -102,30 +101,23 @@ elif [[ $_DISTRO = "debian" ]]; then
                 && sudo apt-get install -y dotnet-sdk-6.0
 
             ## Install Java.
-            echo "Installing Java 13..."
-            sudo apt install openjdk-13-jdk -y
-
-            ## Add keydb source.
-            echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/keydb.list
-            sudo wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg
+            echo "Installing 'openjdk-11-jdk'..."
+            sudo apt install openjdk-11-jdk -y
 
             ## Other prerequisites.
             echo "Installing other prerequisites..."
             sudo apt-get update
-            sudo apt-get install keydb git ccze -y
+            sudo apt-get install redis-server git ccze -y
             ;;
         *)  unsupported ;;
     esac
 # Linux Mint:
 #   20
 #   19
-#   18
 elif [[ $_DISTRO = "linuxmint" ]]; then
     case "$_SVER" in
-        20) install_prereqs "ubuntu" "20.04" ;;
-        19) install_prereqs "ubuntu" "18.04" ;;
-        18) install_prereqs "ubuntu" "16.04" ;;
-        *)  unsupported ;;
+        19|20) install_prereqs "ubuntu" "$_VER" "openjdk-17-jdk" ;;
+        *)     unsupported ;;
     esac
 fi
 

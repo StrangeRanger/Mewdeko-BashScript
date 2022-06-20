@@ -79,7 +79,8 @@ export _RAW_URL="https://raw.githubusercontent.com/$installer_repo/$installer_br
 echo "Downloading the latest installer..."
 curl -O "$_RAW_URL"/installer_prep.sh
 sudo chmod +x installer_prep.sh \
-    && ./installer_prep.sh
+    && ./installer_prep.sh \
+    || exit "$?"  # Uses the exit code passed by 'installer_prep.sh'.
 
 
 #### End of [ Main ]
