@@ -26,5 +26,5 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 Initial working [beta] release.
 
 [unreleased]: https://github.com/StrangeRanger/Mewdeko-BashScript/compare/v1.0.0...HEAD
-[v1.0.0]: https://github.com/StrangeRanger/Mewdeko-BashScript/compare/v1.0.0
+[v1.0.0]: https://github.com/StrangeRanger/Mewdeko-BashScript/releases/tag/v1.0.0
 [v1.0.0-beta.1]: https://github.com/StrangeRanger/Mewdeko-BashScript/releases/tag/v1.0.0-beta.1
