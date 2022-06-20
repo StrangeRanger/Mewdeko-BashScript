@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## [v1.0.0] 2022-06-20
+## [v1.0.0] - 2022-06-20
 
 ### Added
 
@@ -21,7 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - ⚠️ Removed support of Linux Mint 18 due to EOL.
 - Installs redis-server instead of keydb.
 
-## [v1.0.0-beta.1] 2022-03-07
+## [v1.0.0-beta.1] - 2022-03-07
 
 Initial working [beta] release.
 
