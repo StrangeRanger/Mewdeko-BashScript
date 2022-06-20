@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## Added
+## [v1.0.0] 2022-06-20
+
+### Added
 
 - Added support for Ubuntu 22.04.
 - Added support for Debian 11.
@@ -19,9 +21,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - ⚠️ Removed support of Linux Mint 18 due to EOL.
 - Installs redis-server instead of keydb.
 
-## [1.0.0] 2022-03-07
+## [v1.0.0-beta.1] 2022-03-07
 
-Initial working release.
+Initial working [beta] release.
 
 [unreleased]: https://github.com/StrangeRanger/NadekoBot-BashScript/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/StrangeRanger/NadekoBot-BashScript/releases/tag/v1.0.0
+[v1.0.0]: https://github.com/StrangeRanger/NadekoBot-BashScript/compare/v1.0.0
+[v1.0.0-beta.1]: https://github.com/StrangeRanger/NadekoBot-BashScript/releases/tag/v1.0.0-beta.1
