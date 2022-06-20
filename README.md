@@ -1,6 +1,5 @@
 # Mewdeko-BashScript
 
-<!--[![Project Tracker](https://img.shields.io/badge/repo%20status-Project%20Tracker-lightgrey)](https://randomserver.xyz/project-tracker.html#nadekobot-bashscript)-->
 [![Style Guide](https://img.shields.io/badge/code%20style-Style%20Guide-blueviolet)](https://github.com/StrangeRanger/bash-style-guide)
 
 This is the official installer for Mewdeko on Linux distributions.
@@ -28,8 +27,7 @@ If the following command was successfully executed, a menu with the following op
 4. Stop Mewdeko
 5. Display 'mewdeko.service' logs in follow mode
 6. Install prerequisites
-7. Back up important files
-8. Exit
+7. Exit
 ```
 
 ## Officially Supported Distributions
@@ -38,6 +36,6 @@ The following is a list of all the Linux distributions and macOS versions that t
 
 | Distro/OS  | Version Number      |
 | ---------- | ------------------- |
-| Ubuntu     | 20.04, 18.04, 16.04 |
-| Linux Mint | 20, 19, 18          |
-| Debian     | 10, 9               |
+| Ubuntu     | 22.04, 20.04, 18.04 |
+| Linux Mint | 20, 19              |
+| Debian     | 11, 10, 9           |
