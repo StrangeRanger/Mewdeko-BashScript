@@ -2,7 +2,7 @@
 
 [![Style Guide](https://img.shields.io/badge/code%20style-Style%20Guide-blueviolet)](https://github.com/StrangeRanger/bash-style-guide)
 
-This is the official installer for Mewdeko on Linux distributions.
+This is the official installer for [Mewdeko](https://github.com/Pusheon/Mewdeko) on Linux distributions.
 
 <!--For information on setting up Mewdeko using this installer, visit the repository's [wiki](https://github.com/StrangeRanger/Mewdeko-BashScript/wiki).-->
 
