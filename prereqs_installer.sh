@@ -40,14 +40,10 @@ install_prereqs() {
     echo "Installing '$3'..."
     sudo apt-get install -y "$3"
 
-    ## Add keydb source.
-    echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/keydb.list
-    sudo wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg
-
     ## Other prerequisites.
     echo "Installing other prerequisites..."
     sudo apt-get update
-    sudo apt-get install keydb git ccze -y
+    sudo apt-get install redis-server git ccze -y
 }
 
 unsupported() {
@@ -108,14 +104,10 @@ elif [[ $_DISTRO = "debian" ]]; then
             echo "Installing 'openjdk-11-jdk'..."
             sudo apt install openjdk-11-jdk -y
 
-            ## Add keydb source.
-            echo "deb https://download.keydb.dev/open-source-dist $(lsb_release -sc) main" | sudo tee /etc/apt/sources.list.d/keydb.list
-            sudo wget -O /etc/apt/trusted.gpg.d/keydb.gpg https://download.keydb.dev/open-source-dist/keyring.gpg
-
             ## Other prerequisites.
             echo "Installing other prerequisites..."
             sudo apt-get update
-            sudo apt-get install keydb git ccze -y
+            sudo apt-get install redis-server git ccze -y
             ;;
         *)  unsupported ;;
     esac
