@@ -15,7 +15,7 @@
 
 # Revision number of 'linuxAIO.sh'.
 # Refer to the 'README' note at the beginning of 'linuxAIO.sh' for more information.
-current_linuxAIO_revision=1
+current_linuxAIO_revision=2
 # Name of the master installer script.
 main_installer="mewdeko_main_installer.sh"
 
