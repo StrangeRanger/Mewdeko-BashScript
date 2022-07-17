@@ -9,8 +9,42 @@
 ########################################################################################
 #### [ Variables ]
 
-# The contents of Mewdeko's service.
-mewdeko_service_content="[Unit]
+
+### Indicate which actions ('disable' or 'enable') to be performed on Mewdeko's
+### service.
+if [[ $_CODENAME = "MewdekoRun" ]]; then
+    dis_en_lower="disable"    # A.1.
+    dis_en_upper="Disabling"  # B.1.
+else
+    dis_en_lower="enable"    # A.1.
+    dis_en_upper="Enabling"  # B.1.
+fi
+
+# PURPOSE: 'StandardOutput' and 'StandardError' no longer support 'syslog', starting in
+##          version 246 of systemd.
+## The contents of Mewdeko's service.
+if ((_SYSTEMD_VERSION >= 246)); then
+    mewdeko_service_content="[Unit]
+Description=Mewdeko service
+After=network.target
+StartLimitIntervalSec=60
+StartLimitBurst=2
+
+[Service]
+Type=simple
+User=$USER
+WorkingDirectory=$_WORKING_DIR
+ExecStart=/bin/bash MewdekoRun.sh
+Restart=on-failure
+RestartSec=5
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=Mewdeko
+
+[Install]
+WantedBy=multi-user.target"
+else
+    mewdeko_service_content="[Unit]
 Description=Mewdeko service
 After=network.target
 StartLimitIntervalSec=60
@@ -29,15 +63,6 @@ SyslogIdentifier=Mewdeko
 
 [Install]
 WantedBy=multi-user.target"
-
-### Indicate which actions ('disable' or 'enable') to be performed on Mewdeko's
-### service.
-if [[ $_CODENAME = "MewdekoRun" ]]; then
-    dis_en_lower="disable"    # A.1.
-    dis_en_upper="Disabling"  # B.1.
-else
-    dis_en_lower="enable"    # A.1.
-    dis_en_upper="Enabling"  # B.1.
 fi
 
 
@@ -54,21 +79,21 @@ fi
 {
     # Create/update the service.
     echo "$mewdeko_service_content" | sudo tee "$_MEWDEKO_SERVICE" &>/dev/null \
-    && sudo systemctl daemon-reload
+        && sudo systemctl daemon-reload
 } || {
     echo "${_RED}Failed to create '$_MEWDEKO_SERVICE_NAME'" >&2
-    echo "${_CYAN}This service must exist for Mewdeko to work$_NC"
+    echo "${_CYAN}This service must exist for Mewdeko to work${_NC}"
     read -rp "Press [Enter] to return to the installer menu"
-    exit 4
+    exit 1
 }
 
 ## Disable/enable the service.
 echo "$dis_en_upper '$_MEWDEKO_SERVICE_NAME'..."
 sudo systemctl "$dis_en_lower" "$_MEWDEKO_SERVICE_NAME" || {
     echo "${_RED}Failed to $dis_en_lower '$_MEWDEKO_SERVICE_NAME'" >&2
-    echo "${_CYAN}This service must be ${dis_en_lower}d in order to use this run mode$_NC"
+    echo "${_CYAN}This service must be ${dis_en_lower}d in order to use this run mode${_NC}"
     read -rp "Press [Enter] to return to the installer menu"
-    exit 4
+    exit 1
 }
 
 # Check if 'MewdekoRun.sh' exists.
@@ -140,17 +165,17 @@ fi
 if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
     echo "Restarting '$_MEWDEKO_SERVICE_NAME'..."
     sudo systemctl restart "$_MEWDEKO_SERVICE_NAME" || {
-        echo "${_RED}Failed to restart '$_MEWDEKO_SERVICE_NAME'$_NC" >&2
+        echo "${_RED}Failed to restart '$_MEWDEKO_SERVICE_NAME'${_NC}" >&2
         read -rp "Press [Enter] to return to the installer menu"
-        exit 4
+        exit 1
     }
 ## Start the service if it is NOT currently running.
 else
     echo "Starting '$_MEWDEKO_SERVICE_NAME'..."
     sudo systemctl start "$_MEWDEKO_SERVICE_NAME" || {
-        echo "${_RED}Failed to start '$_MEWDEKO_SERVICE_NAME'$_NC" >&2
+        echo "${_RED}Failed to start '$_MEWDEKO_SERVICE_NAME'${_NC}" >&2
         read -rp "Press [Enter] to return to the installer menu"
-        exit 4
+        exit 1
     }
 fi
 

@@ -3,12 +3,6 @@
 # Install all of the packages and dependencies required for Mewdeko to run on Linux
 # distributions.
 #
-# Comment key:
-#   A.1. - NOTE: If the write perms are not applied to all users for this tool, attempts
-#                to update 'youtube-dl' by a non-root user will always fail.
-#   B.1. - FIXME: Find a better solution than modifying the perms in such a way that I
-#                 have.
-#
 ########################################################################################
 #### [ Functions ]
 
@@ -19,9 +13,12 @@ install_prereqs() {
 	#                all compatible Linux distributions, besides Debian 9.
 	#
     # Parameters:
-    # 	$1 - Distribution name.
-    # 	$2 - Distribution version.
-    #   $3 - OpenJDK version
+    # 	$1 - required
+    #       Distribution name.
+    # 	$2 - required
+    #       Distribution version.
+    #   $3 - required
+    #       OpenJDK version.
     ####
 
     echo "Installing .NET Core..."
@@ -53,9 +50,9 @@ unsupported() {
     ####
 
     echo "${_RED}The installer does not support the automatic installation and setup" \
-        "of Mewdeko's prerequisites for your OS: $_DISTRO $_VER $_ARCH$_NC"
+        "of Mewdeko's prerequisites for your OS: $_DISTRO $_VER ${_ARCH}${_NC}"
     read -rp "Press [Enter] to return to the installer menu"
-    exit 4
+    exit 3
 }
 
 
@@ -121,7 +118,7 @@ elif [[ $_DISTRO = "linuxmint" ]]; then
     esac
 fi
 
-echo -e "\n${_GREEN}Finished installing prerequisites$_NC"
+echo -e "\n${_GREEN}Finished installing prerequisites${_NC}"
 read -rp "Press [Enter] to return to the installer menu"
 
 

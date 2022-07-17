@@ -6,6 +6,7 @@
 #### [ Variables ]
 
 
+mewdeko_service_active=false
 current_creds="Mewdeko/src/Mewdeko/credentials.json"
 new_creds="Mewdeko_tmp/Mewdeko/src/Mewdeko/credentials.json"
 current_database="Mewdeko/src/Mewdeko/bin/Release/net6.0/data/Mewdeko.db"
@@ -41,15 +42,14 @@ fi
 ## Create a temporary folder to download Mewdeko into.
 mkdir Mewdeko_tmp
 cd Mewdeko_tmp || {
-    echo "${_RED}Failed to change working directory$_NC" >&2
+    echo "${_RED}Failed to change working directory${_NC}" >&2
     exit 1
 }
 
 echo "Downloading Mewdeko into 'Mewdeko_tmp'..."
 # Download Mewdeko from a specified branch/tag.
-git clone -b "$_MEWDEKO_INSTALL_VERSION" --recursive --depth 1 \
-        https://github.com/Sylveon76/Mewdeko || {
-    echo "${_RED}Failed to download Mewdeko$_NC" >&2
+git clone -b "$_MEWDEKO_INSTALL_VERSION" --recursive --depth 1 https://github.com/Sylveon76/Mewdeko || {
+    echo "${_RED}Failed to download Mewdeko${_NC}" >&2
     exit 1
 }
 
@@ -62,7 +62,7 @@ if [[ -d /tmp/NuGetScratch ]]; then
     # installer is currently being run under.
     sudo chown -R "$USER":"$USER" /tmp/NuGetScratch /home/"$USER"/.nuget || {
         echo "${_RED}Failed to to modify the ownership of '/tmp/NuGetScratch' and/or" \
-            "'/home/$USER/.nuget'...$_NC" >&2
+            "'/home/$USER/.nuget'...${_NC}" >&2
         exit 1
     }
 fi
@@ -73,7 +73,7 @@ echo "Building Mewdeko..."
         && dotnet build -c Release \
         && cd "$_WORKING_DIR"
 } || {
-    echo "${_RED}Failed to build Mewdeko$_NC" >&2
+    echo "${_RED}Failed to build Mewdeko${_NC}" >&2
     exit 1
 }
 
@@ -126,11 +126,11 @@ mv Mewdeko_tmp/Mewdeko . && rmdir Mewdeko_tmp
 #### [[ Clean Up and Present Results ]]
 
 
-echo -e "\n${_GREEN}Finished downloading/updating Mewdeko$_NC"
+echo -e "\n${_GREEN}Finished downloading/updating Mewdeko${_NC}"
 
-if [[ $mewdeko_service_active ]]; then
+if "$mewdeko_service_active"; then
     echo "${_CYAN}NOTE: '$_NADEKO_SERVICE_NAME' was stopped to update Mewdeko and" \
-        "needs to be started using one of the run modes in the installer menu$_NC"
+        "needs to be started using one of the run modes in the installer menu${_NC}"
 fi
 
 read -rp "Press [Enter] to apply any existing changes to the installers"

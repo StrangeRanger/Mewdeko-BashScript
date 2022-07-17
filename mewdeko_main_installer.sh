@@ -18,8 +18,8 @@ _MEWDEKO_SERVICE_NAME="mewdeko.service"
 _MEWDEKO_SERVICE="/etc/systemd/system/$_MEWDEKO_SERVICE_NAME"
 
 ## Indicates which major version of Dotnet and Java (minimum) is required.
-req_dotnet_version="6"
-req_min_java_version="11"
+req_dotnet_version=6
+req_min_java_version=11
 
 
 #### End of [ Variables ]
@@ -41,25 +41,22 @@ _STOP_SERVICE() {
     # Function Info: Stops Mewdeko's service.
     #
     # Parameters:
-    #   $1 - True when the function should output text indicating if the service has
-    #        been stopped or is currently not running, else false.
+    #   $1 - optional
+    #       True when the function should output text indicating if the service has been
+    #       stopped or is currently not running.
     ####
 
     if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
         echo "Stopping '$_MEWDEKO_SERVICE_NAME'..."
         sudo systemctl stop "$_MEWDEKO_SERVICE_NAME" || {
             echo "${_RED}Failed to stop '$_MEWDEKO_SERVICE_NAME'" >&2
-            echo "${_CYAN}You will need to restart '$1' to apply any updates" \
-                "to Mewdeko$_NC"
+            echo "${_CYAN}You will need to restart '$1' to apply any updates to" \
+                "Mewdeko${_NC}"
             return 1
         }
-        if [[ $1 = true ]]; then
-            echo -e "\n${_GREEN}Mewdeko has been stopped$_NC"
-        fi
+        [[ $1 = true ]] && echo -e "\n${_GREEN}Mewdeko has been stopped${_NC}"
     else
-        if [[ $1 = true ]]; then
-            echo -e "\n${_CYAN}Mewdeko is not currently running$_NC"
-        fi
+        [[ $1 = true ]] && echo -e "\n${_CYAN}Mewdeko is not currently running${_NC}"
     fi
 }
 
@@ -69,7 +66,7 @@ _FOLLOW_SERVICE_LOGS() {
     ####
 
     (
-        trap 'exit' SIGINT
+        trap 'exit 130' SIGINT
         sudo journalctl -f -u "$_MEWDEKO_SERVICE_NAME"  | ccze -A
     )
 }
@@ -80,8 +77,9 @@ _WATCH_SERVICE_LOGS() {
     #                function '_FOLLOW_SERVICE_LOGS'.
     #
     # Parameters:
-    #   $1 - Indicates if the function was called from one of the runner scripts or
-    #        from within the master installer.
+    #   $1 - required
+    #       Indicates if the function was called from one of the runner scripts or from
+    #       within the master installer.
     ####
 
     if [[ $1 = "runner" ]]; then
@@ -91,15 +89,15 @@ _WATCH_SERVICE_LOGS() {
     fi
 
     echo "${_CYAN}To stop displaying the startup logs:"
-    echo "1) Press 'Ctrl' + 'C'$_NC"
+    echo "1) Press 'Ctrl' + 'C'${_NC}"
     echo ""
 
     _FOLLOW_SERVICE_LOGS
 
     if [[ $1 = "runner" ]]; then
         echo -e "\n"
-        echo "Please check the logs above to make sure that there aren't any" \
-            "errors, and if there are, to resolve whatever issue is causing them"
+        echo "Please check the logs above to make sure that there aren't any errors," \
+            "and if there are, to resolve whatever issue is causing them"
     fi
 
     echo -e "\n"
@@ -112,17 +110,14 @@ exit_code_actions() {
     #                perform the corresponding/appropriate actions.
     #
     # Parameters:
-    #   $1 - Return/exit code.
-    #
-    # Code Meaning:
-    #	1   - Something happened that requires the exit of the entire installer.
-    #   127 - When the end-user uses 'CTRL' + 'C' or 'CTRL' + 'Z'.
+    #   $1 - required
+    #       Return/exit code.
     ####
 
     case "$1" in
-        1|127) exit "$1" ;;
+        3) return 0 ;;
+        *) exit "$1" ;;
     esac
-
 }
 
 hash_ccze() {
@@ -144,7 +139,7 @@ disabled_reasons() {
 
     if (! hash dotnet \
             || ! hash java \
-            || [[ $ccze_installed = false ]] \
+            || ! "$ccze_installed" \
             || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]] \
             || [[ ${java_version:-false} < "$req_min_java_version" ]]) &>/dev/null; then
         echo "  One or more prerequisites are not installed"
@@ -161,7 +156,7 @@ disabled_reasons() {
         echo "    Use option 1 to download Mewdeko"
     fi
 
-    echo "${_NC}"
+    echo "$_NC"
 }
 
 
@@ -170,7 +165,7 @@ disabled_reasons() {
 #### [ Main ]
 
 
-echo -e "Welcome to the Mewdeko installer\n"
+printf "%sWelcome to the NadekoBot installer\n\n" "$_CLRLN"
 
 while true; do
     ####################################################################################
@@ -190,6 +185,7 @@ while true; do
     option_two_text="2. Run Mewdeko in the background"
     option_three_text="3. Run Mewdeko in the background with auto restart"
     ## Option 5.
+    option_five_disabled=false
     option_five_text="5. Display '$_MEWDEKO_SERVICE_NAME' logs in follow mode"
 
 
@@ -228,7 +224,7 @@ while true; do
     ## Disable option 1 if any of the following tools are not installed.
     if (! hash dotnet \
             || ! hash java \
-            || [[ $ccze_installed = false ]] \
+            || ! "$ccze_installed" \
             || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]] \
             || [[ ${java_version:-false} < "$req_min_java_version" ]]) &>/dev/null; then
         option_one_disabled=true
@@ -250,21 +246,21 @@ while true; do
     elif [[ -f MewdekoRun.sh ]]; then
         ## Option 5 remains enabled, if Mewdeko's service is running.
         if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
-            run_mode_status=" ${_GREEN}(Running in this mode)$_NC"
+            run_mode_status=" ${_GREEN}(Running in this mode)${_NC}"
         ## Disable option 5 if Mewdeko's service NOT running.
         elif [[ $_MEWDEKO_SERVICE_STATUS = "inactive" ]]; then
             ## Option 5.
             option_five_disabled=true
             option_five_text="${_GREY}${option_five_text}${disabled_option_v2}${_NC}"
 
-            run_mode_status=" ${_YELLOW}(Set up to run in this mode)$_NC"
+            run_mode_status=" ${_YELLOW}(Set up to run in this mode)${_NC}"
         ## Disable option 5.
         else
             ## Option 5.
             option_five_disabled=true
             option_five_text="${_GREY}${option_five_text}${disabled_option_v2}${_NC}"
 
-            run_mode_status=" ${_YELLOW}(Status unknown)$_NC"
+            run_mode_status=" ${_YELLOW}(Status unknown)${_NC}"
         fi
 
         ## If Mewdeko is running in the background with auto restart...
@@ -294,7 +290,7 @@ while true; do
             ## B.1.
             if [[ $option_one_disabled = true ]]; then
                 clear -x
-                echo "${_RED}Option 1 is currently disabled$_NC"
+                echo "${_RED}Option 1 is currently disabled${_NC}"
                 disabled_reasons
                 continue
             fi
@@ -308,6 +304,9 @@ while true; do
             clear -x
             ./mewdeko_latest_installer.sh || exit_code_actions "$?"
 
+            # TODO: Figure out way to kill previous execution of the installer, possibly
+            #       an array of PIDs and the 'clean_up()' function. This way, cleaning
+            #       up and exiting text doesn't print duplicates.
             # Execute the newly downloaded version of 'installer_prep.sh', so that all
             # changes are applied.
             exec "$_INSTALLER_PREP"
@@ -316,7 +315,7 @@ while true; do
             ## B.1.
             if [[ $option_two_and_three_disabled = true ]]; then
                 clear -x
-                echo "${_RED}Option $choice is currently disabled$_NC"
+                echo "${_RED}Option $choice is currently disabled${_NC}"
                 disabled_reasons
                 continue
             fi
@@ -355,7 +354,7 @@ while true; do
             clear -x
             ## B.1.
             if [[ $option_five_disabled = true ]]; then
-                echo "${_RED}Option 5 is currently disabled$_NC"
+                echo "${_RED}Option 5 is currently disabled${_NC}"
                 echo ""
                 continue
             fi
@@ -374,7 +373,7 @@ while true; do
             ;;
         *)
             clear -x
-            echo "${_RED}Invalid input: '$choice' is not a valid option$_NC" >&2
+            echo "${_RED}Invalid input: '$choice' is not a valid option${_NC}" >&2
             echo ""
             ;;
     esac
