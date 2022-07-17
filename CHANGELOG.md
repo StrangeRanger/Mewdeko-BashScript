@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- Replaced commands with Parameter Expansion, where possible.
+- Changed how the variables used to change the color of output text, are formatted, in the hopes of increasing portability.
+- Refactored if statements to be more simplistic, where applicable.
+- Improve exit code functionality:
+  - Modified traps to provide proper signal exit codes.
+    - Example: 128+n where n is the signal number, such as 9 being SIGKILL.
+  - Changed exit codes to non-reserved exit codes.
+- Mewdeko daemon uses `journal` for `StandardOutput` and `StandardError`, instead of `syslog`, if systemd version is 246 and above.
+- Updated function info formatting.
+- Small style changes.
+<!-- - Downloading 'mewdeko_main_installer' text gets replaced with with the Welcome to the installer text.-->
+
+### Fixed
+
+- Not properly retrieving `systemd` version number.
+- Small fix for bad formatting of the output of cleaning and exit text.
+- Fix incorrect text printed to terminal.
+
 ## [v1.0.0] - 2022-06-20
 
 ### Added
