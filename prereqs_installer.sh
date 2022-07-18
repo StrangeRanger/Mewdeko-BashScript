@@ -62,19 +62,11 @@ unsupported() {
 
 read -rp "We will now install Mewdeko's prerequisites. Press [Enter] to continue."
 
-# Ubuntu:
-#   22.04
-#   20.04
-#   18.04
 if [[ $_DISTRO = "ubuntu" ]]; then
     case "$_VER" in
         18.04|20.04|22.04) install_prereqs "ubuntu" "$_VER" "openjdk-17-jdk" ;;
         *)                 unsupported ;;
     esac
-# Debian:
-#   11
-#   10
-#   9
 elif [[ $_DISTRO = "debian" ]]; then
     case "$_SVER" in
         11) install_prereqs "debian" "11" "openjdk-17-jdk" ;;
@@ -106,9 +98,6 @@ elif [[ $_DISTRO = "debian" ]]; then
             ;;
         *)  unsupported ;;
     esac
-# Linux Mint:
-#   20
-#   19
 elif [[ $_DISTRO = "linuxmint" ]]; then
     case "$_SVER" in
         19|20) install_prereqs "ubuntu" "$_VER" "openjdk-17-jdk" ;;
