@@ -1,5 +1,4 @@
 #!/bin/bash
-# shellcheck disable=SC2155
 #
 # This script looks at the operating system, architecture, bit type, etc., to determine
 # whether or not the system is supported by Mewdeko. Once the system is deemed as
@@ -20,19 +19,22 @@ current_linuxAIO_revision=2
 main_installer="mewdeko_main_installer.sh"
 
 ## Modify output text color.
-export _YELLOW="$(printf '\033[1;33m')"
-export _GREEN="$(printf '\033[0;32m')"
-export _CYAN="$(printf '\033[0;36m')"
-export _RED="$(printf '\033[1;31m')"
-export _NC="$(printf '\033[0m')"
-export _GREY="$(printf '\033[0;90m')"
-export _CLRLN="$(printf '\r\033[K')"
+# shellcheck disable=SC2155
+{
+    export _YELLOW="$(printf '\033[1;33m')"
+    export _GREEN="$(printf '\033[0;32m')"
+    export _CYAN="$(printf '\033[0;36m')"
+    export _RED="$(printf '\033[1;31m')"
+    export _NC="$(printf '\033[0m')"
+    export _GREY="$(printf '\033[0;90m')"
+    export _CLRLN="$(printf '\r\033[K')"
+}
 
 ## PURPOSE: The '--no-hostname' flag for 'journalctl' only works with systemd 230 and
 ##          later. So if systemd is older than 230, $_NO_HOSTNAME will not be created.
+# shellcheck disable=SC2206
 {
     _SYSTEMD_VERSION_TMP=$(systemd --version)
-    # shellcheck disable=SC2206
     _SYSTEMD_VERSION_TMP=($_SYSTEMD_VERSION_TMP)
    _SYSTEMD_VERSION=${_SYSTEMD_VERSION_TMP[1]}
 
@@ -73,8 +75,6 @@ detect_sys_info() {
     esac
 }
 
-# TODO: Add error checking to sed... If they fail, print the tracked variables into
-#       a new file.
 linuxAIO_update() {
     ####
     # Function Info: Download the latest version of 'linuxAIO.sh' if $_LINUXAIO_REVISION
@@ -100,14 +100,12 @@ linuxAIO_update() {
     echo "Applying existing configurations to the new 'linuxAIO.sh'..."
 
     ## Set $installer_branch inside of the new 'linuxAIO.sh'.
-    if [[ $installer_branch_found = 0 ]]; then
-        sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO.sh
-    fi
+    [[ $installer_branch_found = 0 ]] \
+        && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO.sh
 
     ## Set $mewdko_install_version inside of the new 'linuxAIO.sh'.
-    if [[ $mewdko_install_version_found = 0 ]]; then
-        sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdko_install_version/" linuxAIO.sh
-    fi
+    [[ $mewdko_install_version_found = 0 ]] \
+        && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdko_install_version/" linuxAIO.sh
 
     echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO.sh'" \
         "and applied changes to the newest version of 'linuxAIO.sh'${_NC}"
@@ -153,9 +151,8 @@ clean_up() {
     local installer_files=("installer_prep.sh" "prereqs_installer.sh"
         "mewdeko_latest_installer.sh" "mewdeko_runner.sh" "mewdeko_main_installer.sh")
 
-    if [[ $3 = true ]]; then echo -e "\n\nCleaning up..."
-    else                     echo -e "\nCleaning up..."
-    fi
+    [[ $3 = true ]] && echo -e "\n\nCleaning up..." \
+                    || echo -e "\nCleaning up..."
 
     cd "$_WORKING_DIR" || {
         echo "${_RED}Failed to move to project root directory${_NC}" >&2
@@ -233,7 +230,7 @@ fi
 cd "${0%/*}" || {
     echo "${_RED}Failed to change working directory" >&2
     echo "${_CYAN}Change your working directory to that of the executed script${_NC}"
-    clean_up "1" "Exiting" "true"
+    clean_up "1" "Exiting"
 }
 
 export _WORKING_DIR="$PWD"
@@ -261,27 +258,16 @@ Distro Version: $_VER
 
 ### Check if the operating system is supported by Mewdeko and installer.
 if [[ $bits = 64 ]]; then
-    # Ubuntu:
-    #   22.04
-    #   20.04
-    #   18.04
     if [[ $_DISTRO = "ubuntu" ]]; then
         case "$_VER" in
             18.04|20.04|22.04) execute_main_installer ;;
             *)                 unsupported ;;
         esac
-    # Debian:
-    #   11
-    #   10
-    #   9
     elif [[ $_DISTRO = "debian" ]]; then
         case "$_SVER" in
             9|10|11) execute_main_installer ;;
             *)       unsupported ;;
         esac
-    # Linux Mint:
-    #   20
-    #   19
     elif [[ $_DISTRO = "linuxmint" ]]; then
         case "$_SVER" in
             19|20) execute_main_installer ;;
