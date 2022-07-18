@@ -138,7 +138,7 @@ else
         "    if [[ -d $_WORKING_DIR/Mewdeko/src/Mewdeko ]]; then" \
         "        cd $_WORKING_DIR/Mewdeko/src/Mewdeko || {" \
         "            echo \"Failed to change working directory to '$_WORKING_DIR/Mewdeko/src/Mewdeko'\" >&2" \
-        "            echo \"Ensure that the working directory inside of '/etc/systemd/system/nadeko.service' is correct\"" \
+        "            echo \"Ensure that the working directory inside of '/etc/systemd/system/mewdeko.service' is correct\"" \
         "            echo \"Exiting...\"" \
         "            exit 1" \
         "        }" \

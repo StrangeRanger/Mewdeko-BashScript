@@ -34,7 +34,7 @@ read -rp "We will now download/update Mewdeko. Press [Enter] to begin."
 
 
 ## Stop the service if it's currently running.
-if [[ $_NADEKO_SERVICE_STATUS = "active" ]]; then
+if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
     mewdeko_service_active=true
     _STOP_SERVICE "false"
 fi
@@ -138,7 +138,7 @@ mv Mewdeko_tmp/Mewdeko . && rmdir Mewdeko_tmp
 echo -e "\n${_GREEN}Finished downloading/updating Mewdeko${_NC}"
 
 if "$mewdeko_service_active"; then
-    echo "${_CYAN}NOTE: '$_NADEKO_SERVICE_NAME' was stopped to update Mewdeko and" \
+    echo "${_CYAN}NOTE: '$_MEWDEKO_SERVICE_NAME' was stopped to update Mewdeko and" \
         "needs to be started using one of the run modes in the installer menu${_NC}"
 fi
 
