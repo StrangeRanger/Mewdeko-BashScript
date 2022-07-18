@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Changed exit codes to non-reserved exit codes.
 - Mewdeko daemon uses `journal` for `StandardOutput` and `StandardError`, instead of `syslog`, if systemd version is 246 and above.
 - Updated function info formatting.
+- Checks if `/home/$USER/.nuget` exists before attempting to chown it.
 - Small style changes.
 <!-- - Downloading 'mewdeko_main_installer' text gets replaced with with the Welcome to the installer text.-->
 
