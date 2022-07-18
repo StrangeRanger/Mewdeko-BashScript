@@ -12,7 +12,7 @@
 
 # Store process id of 'mewdeko_main_installer.sh', in case it needs to be manually
 # killed by a sub/child script.
-export _MEWDEKO_MASTER_INSTALLER_PID=$$
+#export _MEWDEKO_MASTER_INSTALLER_PID=$$
 ## To be exported.
 _MEWDEKO_SERVICE_NAME="mewdeko.service"
 _MEWDEKO_SERVICE="/etc/systemd/system/$_MEWDEKO_SERVICE_NAME"
@@ -50,8 +50,8 @@ _STOP_SERVICE() {
         echo "Stopping '$_MEWDEKO_SERVICE_NAME'..."
         sudo systemctl stop "$_MEWDEKO_SERVICE_NAME" || {
             echo "${_RED}Failed to stop '$_MEWDEKO_SERVICE_NAME'" >&2
-            echo "${_CYAN}You will need to restart '$1' to apply any updates to" \
-                "Mewdeko${_NC}"
+            echo "${_CYAN}You will need to restart '$_MEWDEKO_SERVICE_NAME' to apply" \
+                "any updates to Mewdeko${_NC}"
             return 1
         }
         [[ $1 = true ]] && echo -e "\n${_GREEN}Mewdeko has been stopped${_NC}"
@@ -82,11 +82,8 @@ _WATCH_SERVICE_LOGS() {
     #       within the master installer.
     ####
 
-    if [[ $1 = "runner" ]]; then
-        echo "Displaying '$_MEWDEKO_SERVICE_NAME' startup logs, live..."
-    else
-        echo "Watching '$_MEWDEKO_SERVICE_NAME' logs, live..."
-    fi
+    [[ $1 = "runner" ]] && echo "Displaying '$_MEWDEKO_SERVICE_NAME' startup logs, live..." \
+                        || echo "Watching '$_MEWDEKO_SERVICE_NAME' logs, live..."
 
     echo "${_CYAN}To stop displaying the startup logs:"
     echo "1) Press 'Ctrl' + 'C'${_NC}"
@@ -94,11 +91,9 @@ _WATCH_SERVICE_LOGS() {
 
     _FOLLOW_SERVICE_LOGS
 
-    if [[ $1 = "runner" ]]; then
-        echo -e "\n"
-        echo "Please check the logs above to make sure that there aren't any errors," \
-            "and if there are, to resolve whatever issue is causing them"
-    fi
+    [[ $1 = "runner" ]] && echo -e "\nPlease check the logs above to make sure that" \
+        "there aren't any errors, and if there are, to resolve whatever issue is" \
+        "causing them"
 
     echo -e "\n"
     read -rp "Press [Enter] to return to the installer menu"
@@ -125,9 +120,8 @@ hash_ccze() {
     # Function Info: Return whether or not 'ccze' is installed.
     ####
 
-    if hash ccze &>/dev/null; then ccze_installed=true
-    else                           ccze_installed=false
-    fi
+    hash ccze &>/dev/null && ccze_installed=true \
+                          || ccze_installed=false
 }
 
 disabled_reasons() {
@@ -149,7 +143,7 @@ disabled_reasons() {
     if [[ -d Mewdeko ]]; then
         if [[ ! -f Mewdeko/src/Mewdeko/credentials.json ]]; then
             echo "  The 'credentials.json' could not be found"
-            echo "    Refer to the following link for help: https://mewdeko.tech/"
+            echo "    Refer to the following link for help: https://blog.mewdeko.tech/credentials-guide/"
         fi
     else
         echo "  Mewdeko could not be found"
@@ -204,8 +198,8 @@ while true; do
 
     if hash java &>/dev/null; then
         ## Java version
-        java_version=$(javac -version | awk '{print $2}')
-        java_version=${java_version//.*/}
+        java_version=$(javac -version | awk '{print $2}')  # Version: x.x.x
+        java_version=${java_version//.*/}                  # Version: x
     fi
 
 
