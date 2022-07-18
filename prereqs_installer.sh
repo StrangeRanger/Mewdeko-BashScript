@@ -39,7 +39,6 @@ install_prereqs() {
 
     ## Other prerequisites.
     echo "Installing other prerequisites..."
-    sudo apt-get update
     sudo apt-get install redis-server git ccze -y
 }
 
@@ -103,7 +102,6 @@ elif [[ $_DISTRO = "debian" ]]; then
 
             ## Other prerequisites.
             echo "Installing other prerequisites..."
-            sudo apt-get update
             sudo apt-get install redis-server git ccze -y
             ;;
         *)  unsupported ;;
