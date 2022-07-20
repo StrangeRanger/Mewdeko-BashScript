@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# The master/main installer for Linux Distributions.
+# The main installer for Linux Distributions.
 #
 # Comment key:
 #   A.1. - Return to prevent further code execution.
@@ -12,7 +12,7 @@
 
 # Store process id of 'mewdeko_main_installer.sh', in case it needs to be manually
 # killed by a sub/child script.
-#export _MEWDEKO_MASTER_INSTALLER_PID=$$
+#export _MEWDEKO_MAIN_INSTALLER_PID=$$
 ## To be exported.
 _MEWDEKO_SERVICE_NAME="mewdeko.service"
 _MEWDEKO_SERVICE="/etc/systemd/system/$_MEWDEKO_SERVICE_NAME"
@@ -79,7 +79,7 @@ _WATCH_SERVICE_LOGS() {
     # Parameters:
     #   $1 - required
     #       Indicates if the function was called from one of the runner scripts or from
-    #       within the master installer.
+    #       within the main installer.
     ####
 
     [[ $1 = "runner" ]] && echo "Displaying '$_MEWDEKO_SERVICE_NAME' startup logs, live..." \
@@ -133,6 +133,7 @@ disabled_reasons() {
 
     if (! hash dotnet \
             || ! hash java \
+            || ! hash redis-server \
             || ! "$ccze_installed" \
             || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]] \
             || [[ ${java_version:-false} < "$req_min_java_version" ]]) &>/dev/null; then
@@ -218,6 +219,7 @@ while true; do
     ## Disable option 1 if any of the following tools are not installed.
     if (! hash dotnet \
             || ! hash java \
+            || ! hash redis-server \
             || ! "$ccze_installed" \
             || [[ ${dotnet_version:-false} != "$req_dotnet_version" ]] \
             || [[ ${java_version:-false} < "$req_min_java_version" ]]) &>/dev/null; then
@@ -282,7 +284,7 @@ while true; do
     case "$choice" in
         1)
             ## B.1.
-            if [[ $option_one_disabled = true ]]; then
+            if "$option_one_disabled"; then
                 clear -x
                 echo "${_RED}Option 1 is currently disabled${_NC}"
                 disabled_reasons
@@ -294,7 +296,7 @@ while true; do
             export _MEWDEKO_SERVICE_NAME
             export _MEWDEKO_SERVICE_STATUS
 
-            _DOWNLOAD_SCRIPT "mewdeko_latest_installer.sh" "mewdeko_latest_installer.sh"
+            _DOWNLOAD_SCRIPT "mewdeko_latest_installer.sh" "true"
             clear -x
             ./mewdeko_latest_installer.sh || exit_code_actions "$?"
 
@@ -307,7 +309,7 @@ while true; do
             ;;
         2|3)
             ## B.1.
-            if [[ $option_two_and_three_disabled = true ]]; then
+            if "$option_two_and_three_disabled"; then
                 clear -x
                 echo "${_RED}Option $choice is currently disabled${_NC}"
                 disabled_reasons
@@ -347,7 +349,7 @@ while true; do
         5)
             clear -x
             ## B.1.
-            if [[ $option_five_disabled = true ]]; then
+            if "$option_five_disabled"; then
                 echo "${_RED}Option 5 is currently disabled${_NC}"
                 echo ""
                 continue

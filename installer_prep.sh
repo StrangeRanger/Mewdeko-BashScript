@@ -2,7 +2,7 @@
 #
 # This script looks at the operating system, architecture, bit type, etc., to determine
 # whether or not the system is supported by Mewdeko. Once the system is deemed as
-# supported, the master installer will be downloaded and executed.
+# supported, the main installer will be downloaded and executed.
 #
 # Comment key:
 #   A.1. - Grouping One
@@ -15,7 +15,7 @@
 # Revision number of 'linuxAIO.sh'.
 # Refer to the 'README' note at the beginning of 'linuxAIO.sh' for more information.
 current_linuxAIO_revision=2
-# Name of the master installer script.
+# Name of the main installer script.
 main_installer="mewdeko_main_installer.sh"
 
 ## Modify output text color.
@@ -36,7 +36,7 @@ main_installer="mewdeko_main_installer.sh"
 {
     _SYSTEMD_VERSION_TMP=$(systemd --version)
     _SYSTEMD_VERSION_TMP=($_SYSTEMD_VERSION_TMP)
-   _SYSTEMD_VERSION=${_SYSTEMD_VERSION_TMP[1]}
+    _SYSTEMD_VERSION=${_SYSTEMD_VERSION_TMP[1]}
 
     export _SYSTEMD_VERSION
     ((_SYSTEMD_VERSION >= 230)) && export _NO_HOSTNAME="--no-hostname"
