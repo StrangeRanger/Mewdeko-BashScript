@@ -44,7 +44,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Removed
 
-- ⚠️ No longer support Ubuntu 16.04.
+- ⚠️ No longer supports Ubuntu 16.04.
 - ⚠️ No longer supports Linux Mint 18, due to EOL.
 
 ## [v1.0.0-beta.1] - 2022-03-07
