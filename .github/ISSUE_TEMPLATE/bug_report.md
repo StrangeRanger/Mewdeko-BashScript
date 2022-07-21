@@ -23,9 +23,10 @@ A clear and concise description of what you expected to happen.
 **Screenshots**
 If applicable, add screenshots to help explain your problem.
 
-**Version Information (please complete the following information):**
- - Linux Distro: [e.g. Ubuntu 20.04]
- - Installer Version: [e.g. v1.0.0]
+**Specifics (please complete the following information):**
+ - OS: [e.g. Ubuntu]
+ - Version: [e.g. v1.2.3]
+ - Branch: [e.g. main]
 
 **Additional context**
 Add any other context about the problem here.
