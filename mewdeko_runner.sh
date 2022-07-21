@@ -72,9 +72,9 @@ fi
 
 
 # Check if the service exists.
-[[ -f $_MEWDEKO_SERVICE ]] && echo "Updating '$_MEWDEKO_SERVICE_NAME'..." \
-                           || echo "Creating '$_MEWDEKO_SERVICE_NAME'..."
-
+if [[ -f $_MEWDEKO_SERVICE ]]; then echo "Updating '$_MEWDEKO_SERVICE_NAME'..."
+else                               echo "Creating '$_MEWDEKO_SERVICE_NAME'..."
+fi
 
 {
     # Create/update the service.

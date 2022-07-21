@@ -82,8 +82,11 @@ _WATCH_SERVICE_LOGS() {
     #       within the main installer.
     ####
 
-    [[ $1 = "runner" ]] && echo "Displaying '$_MEWDEKO_SERVICE_NAME' startup logs, live..." \
-                        || echo "Watching '$_MEWDEKO_SERVICE_NAME' logs, live..."
+    if [[ $1 = "runner" ]]; then
+        echo "Displaying '$_MEWDEKO_SERVICE_NAME' startup logs, live..."
+    else
+        echo "Watching '$_MEWDEKO_SERVICE_NAME' logs, live..."
+    fi
 
     echo "${_CYAN}To stop displaying the startup logs:"
     echo "1) Press 'Ctrl' + 'C'${_NC}"

@@ -151,8 +151,9 @@ clean_up() {
     local installer_files=("installer_prep.sh" "prereqs_installer.sh"
         "mewdeko_latest_installer.sh" "mewdeko_runner.sh" "mewdeko_main_installer.sh")
 
-    [[ $3 = true ]] && echo -e "\n\nCleaning up..." \
-                    || echo -e "\nCleaning up..."
+    if [[ $3 = true ]]; then echo -e "\n\nCleaning up..."
+    else                     echo -e "\nCleaning up..."
+    fi
 
     cd "$_WORKING_DIR" || {
         echo "${_RED}Failed to move to project root directory${_NC}" >&2
