@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+- Revert some if statements to fix possible SC2015 problems.
+
 ## [v1.0.1] - 2022-07-20
 
 ### Changed
