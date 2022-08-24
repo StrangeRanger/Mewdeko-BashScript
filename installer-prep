@@ -18,6 +18,12 @@ current_linuxAIO_revision=2
 # Name of the main installer script.
 main_installer="mewdeko-main-installer"
 
+# Similar to 'current_linuxAIO_revision', expecpt it's used as a more general tracking
+# number. Instead of only being used to represent the relationship between this script
+# and 'linuxAIO', it represents major changes to the installer that requires a change in
+# behavior that would otherwise result in conflict with older verisons of the script.
+export _MEWDEKO_REVISION_NUMBER=1
+
 ## Modify output text color.
 # shellcheck disable=SC2155
 {
@@ -81,19 +87,20 @@ linuxAIO_update() {
     #                and $current_linuxAIO_revision aren't of equal value.
     ####
 
-    echo "${_YELLOW}You are using an older version of 'linuxAIO'${_NC}"
+    echo -n "${_YELLOW}You are using an older version of 'linuxAIO'. "
+    read -rp "Press [Enter] to download the latest version of 'linuxAIO'.${_NC}"
     echo "Downloading latest 'linuxAIO'..."
 
     ## Save the values of the current Configuration Variables specified in
     ## 'linuxAIO', to be set in the new 'linuxAIO'.
-    local installer_branch                                       # A.1.
-    local installer_branch_found                                 # A.1.
+    local installer_branch                                    # A.1.
+    local installer_branch_found                              # A.1.
     installer_branch=$(grep '^installer_branch=.*' linuxAIO)  # A.1.
-    installer_branch_found="$?"	                                 # A.1.
-    local mewdko_install_version                                                      # A.2.
-    local mewdko_install_version_found                                                # A.2.
-    mewdko_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO)  # A.2.
-    mewdko_install_version_found="$?"                                                 # A.2.
+    installer_branch_found="$?"	                              # A.1.
+    local mewdeko_install_version                                                   # A.2.
+    local mewdeko_install_version_found                                             # A.2.
+    mewdeko_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO)  # A.2.
+    mewdeko_install_version_found="$?"                                              # A.2.
 
     curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
 
@@ -103,9 +110,9 @@ linuxAIO_update() {
     [[ $installer_branch_found = 0 ]] \
         && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO
 
-    ## Set $mewdko_install_version inside of the new 'linuxAIO'.
-    [[ $mewdko_install_version_found = 0 ]] \
-        && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdko_install_version/" linuxAIO
+    ## Set $mewdeko_install_version inside of the new 'linuxAIO'.
+    [[ $mewdeko_install_version_found = 0 ]] \
+        && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdeko_install_version/" linuxAIO
 
     echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO'" \
         "and applied changes to the newest version of 'linuxAIO'${_NC}"
@@ -266,12 +273,12 @@ if [[ $bits = 64 ]]; then
         esac
     elif [[ $_DISTRO = "debian" ]]; then
         case "$_SVER" in
-            9|10|11) execute_main_installer ;;
-            *)       unsupported ;;
+            10|11) execute_main_installer ;;
+            *)     unsupported ;;
         esac
     elif [[ $_DISTRO = "linuxmint" ]]; then
         case "$_SVER" in
-            19|20) execute_main_installer ;;
+            20|21) execute_main_installer ;;
             *)     unsupported ;;
         esac
     else
