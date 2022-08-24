@@ -12,11 +12,11 @@
 #### [ Exported and/or Globally Used Variables ]
 
 
-# Revision number of 'linuxAIO.sh'.
-# Refer to the 'README' note at the beginning of 'linuxAIO.sh' for more information.
+# Revision number of 'linuxAIO'.
+# Refer to the 'README' note at the beginning of 'linuxAIO' for more information.
 current_linuxAIO_revision=2
 # Name of the main installer script.
-main_installer="mewdeko_main_installer.sh"
+main_installer="mewdeko-main-installer"
 
 ## Modify output text color.
 # shellcheck disable=SC2155
@@ -77,38 +77,38 @@ detect_sys_info() {
 
 linuxAIO_update() {
     ####
-    # Function Info: Download the latest version of 'linuxAIO.sh' if $_LINUXAIO_REVISION
+    # Function Info: Download the latest version of 'linuxAIO' if $_LINUXAIO_REVISION
     #                and $current_linuxAIO_revision aren't of equal value.
     ####
 
-    echo "${_YELLOW}You are using an older version of 'linuxAIO.sh'${_NC}"
-    echo "Downloading latest 'linuxAIO.sh'..."
+    echo "${_YELLOW}You are using an older version of 'linuxAIO'${_NC}"
+    echo "Downloading latest 'linuxAIO'..."
 
     ## Save the values of the current Configuration Variables specified in
-    ## 'linuxAIO.sh', to be set in the new 'linuxAIO.sh'.
+    ## 'linuxAIO', to be set in the new 'linuxAIO'.
     local installer_branch                                       # A.1.
     local installer_branch_found                                 # A.1.
-    installer_branch=$(grep '^installer_branch=.*' linuxAIO.sh)  # A.1.
+    installer_branch=$(grep '^installer_branch=.*' linuxAIO)  # A.1.
     installer_branch_found="$?"	                                 # A.1.
     local mewdko_install_version                                                      # A.2.
     local mewdko_install_version_found                                                # A.2.
-    mewdko_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO.sh)  # A.2.
+    mewdko_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO)  # A.2.
     mewdko_install_version_found="$?"                                                 # A.2.
 
-    curl -O "$_RAW_URL"/linuxAIO.sh && sudo chmod +x linuxAIO.sh
+    curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
 
-    echo "Applying existing configurations to the new 'linuxAIO.sh'..."
+    echo "Applying existing configurations to the new 'linuxAIO'..."
 
-    ## Set $installer_branch inside of the new 'linuxAIO.sh'.
+    ## Set $installer_branch inside of the new 'linuxAIO'.
     [[ $installer_branch_found = 0 ]] \
-        && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO.sh
+        && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO
 
-    ## Set $mewdko_install_version inside of the new 'linuxAIO.sh'.
+    ## Set $mewdko_install_version inside of the new 'linuxAIO'.
     [[ $mewdko_install_version_found = 0 ]] \
-        && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdko_install_version/" linuxAIO.sh
+        && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdko_install_version/" linuxAIO
 
-    echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO.sh'" \
-        "and applied changes to the newest version of 'linuxAIO.sh'${_NC}"
+    echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO'" \
+        "and applied changes to the newest version of 'linuxAIO'${_NC}"
 
     clean_up "0" "Exiting" "true"
 }
@@ -148,8 +148,8 @@ clean_up() {
     ####
 
     # Files to be removed.
-    local installer_files=("installer_prep.sh" "prereqs_installer.sh"
-        "mewdeko_latest_installer.sh" "mewdeko_runner.sh" "mewdeko_main_installer.sh")
+    local installer_files=("installer-prep" "prereqs-installer" "mewdeko-runner"
+        "mewdeko-latest-installer" "mewdeko-main-installer")
 
     if [[ $3 = true ]]; then echo -e "\n\nCleaning up..."
     else                     echo -e "\nCleaning up..."
@@ -176,7 +176,7 @@ execute_main_installer() {
     ####
 
     _DOWNLOAD_SCRIPT "$main_installer" "true"
-    ./mewdeko_main_installer.sh
+    ./mewdeko-main-installer
     clean_up "$?" "Exiting"
 }
 
@@ -220,7 +220,7 @@ trap 'clean_up "148" "Exiting" "true"' SIGTSTP
 #### [ Prepping ]
 
 
-# If the current 'linuxAIO.sh' revision number is not of equil value of the expected
+# If the current 'linuxAIO' revision number is not of equil value of the expected
 # revision number.
 if [[ $_LINUXAIO_REVISION && $_LINUXAIO_REVISION != "$current_linuxAIO_revision" ]]; then
     linuxAIO_update
@@ -235,7 +235,7 @@ cd "${0%/*}" || {
 }
 
 export _WORKING_DIR="$PWD"
-export _INSTALLER_PREP="$_WORKING_DIR/installer_prep.sh"
+export _INSTALLER_PREP="$_WORKING_DIR/installer-prep"
 
 
 #### End of [ Prepping ]

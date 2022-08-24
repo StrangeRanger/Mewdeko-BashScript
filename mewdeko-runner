@@ -34,7 +34,7 @@ StartLimitBurst=2
 Type=simple
 User=$USER
 WorkingDirectory=$_WORKING_DIR
-ExecStart=/bin/bash MewdekoRun.sh
+ExecStart=/bin/bash MewdekoRun
 Restart=on-failure
 RestartSec=5
 StandardOutput=journal
@@ -54,7 +54,7 @@ StartLimitBurst=2
 Type=simple
 User=$USER
 WorkingDirectory=$_WORKING_DIR
-ExecStart=/bin/bash MewdekoRun.sh
+ExecStart=/bin/bash MewdekoRun
 Restart=on-failure
 RestartSec=5
 StandardOutput=syslog
@@ -96,17 +96,17 @@ sudo systemctl "$lower" "$_MEWDEKO_SERVICE_NAME" || {
     exit 1
 }
 
-# Check if 'MewdekoRun.sh' exists.
-if [[ -f MewdekoRun.sh ]]; then
-    echo "Updating 'MewdekoRun.sh'..."
-## Create 'MewdekoRun.sh' if it doesn't exist.
+# Check if 'MewdekoRun' exists.
+if [[ -f MewdekoRun ]]; then
+    echo "Updating 'MewdekoRun'..."
+## Create 'MewdekoRun' if it doesn't exist.
 else
-    echo "Creating 'MewdekoRun.sh'..."
-    touch MewdekoRun.sh
-    sudo chmod +x MewdekoRun.sh
+    echo "Creating 'MewdekoRun'..."
+    touch MewdekoRun
+    sudo chmod +x MewdekoRun
 fi
 
-## Add the code required to run Mewdeko in the background, to 'MewdekoRun.sh'.
+## Add the code required to run Mewdeko in the background, to 'MewdekoRun'.
 if [[ $_CODENAME = "MewdekoRun" ]]; then
     printf '%s\n' \
         "#!/bin/bash" \
@@ -122,9 +122,9 @@ if [[ $_CODENAME = "MewdekoRun" ]]; then
         "    exit 1" \
         "}" \
         "echo \"Stopping Mewdeko...\"" \
-        "cd $_WORKING_DIR" > MewdekoRun.sh
+        "cd $_WORKING_DIR" > MewdekoRun
 ## Add code required to run Mewdeko in the background with auto restart, to
-## 'MewdekoRun.sh'.
+## 'MewdekoRun'.
 else
     printf '%s\n' \
         "#!/bin/bash" \
@@ -158,7 +158,7 @@ else
         "    echo \"Restarting Mewdeko...\"" \
         "done" \
         "" \
-        "echo \"Stopping Mewdeko...\"" > MewdekoRun.sh
+        "echo \"Stopping Mewdeko...\"" > MewdekoRun
 fi
 
 ## Restart the service if it is currently running.

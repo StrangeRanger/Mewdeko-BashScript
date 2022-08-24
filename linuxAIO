@@ -1,17 +1,17 @@
 #!/bin/bash
 #
-# 'linuxAIO.sh' acts as the intermediary between the system Mewdeko is being hosted on
-# and 'installer_prep.sh'. To prevent any conflicts with updates to the installer, this
+# 'linuxAIO' acts as the intermediary between the system Mewdeko is being hosted on
+# and 'installer-prep'. To prevent any conflicts with updates to the installer, this
 # script has as little code as deemed necessary.
 #
 # README: Because this script remains on the user's system, any changes to the code that
 #         are pushed to github, are never applied to the version on the user's system.
 #         To get around this, the variable $_LINUXAIO_REVISION contains a revision
-#         number that is updated every time any changes are made to 'linuxAIO.sh'.
-#         Another variable in 'installer_prep.sh' ($current_linuxAIO_revision) gets
+#         number that is updated every time any changes are made to 'linuxAIO'.
+#         Another variable in 'installer-prep' ($current_linuxAIO_revision) gets
 #         updated alongside with $_LINUXAIO_REVISION. Whenever the user executes the
-#         installer, 'installer_prep.sh' will compare the two variables. If they are not
-#         of equal value, the newest version of 'linuxAIO.sh' is retrieved from github.
+#         installer, 'installer-prep' will compare the two variables. If they are not
+#         of equal value, the newest version of 'linuxAIO' is retrieved from github.
 #
 ########################################################################################
 #### [ Variables ]
@@ -22,7 +22,7 @@
 ####
 #### ~~~ THESE VARIABLES CAN BE MODIFIED BY THE END-USER ~~~
 ####
-#### Whenever the installer retrieves the newest version of 'linuxAIO.sh', all modified
+#### Whenever the installer retrieves the newest version of 'linuxAIO', all modified
 #### variables, with the exception of $installer_repo and $_FILES_TO_BACK_UP, will be
 #### applied to the new version of this script.
 
@@ -77,9 +77,9 @@ export _RAW_URL="https://raw.githubusercontent.com/$installer_repo/$installer_br
 
 
 echo "Downloading the latest installer..."
-curl -O "$_RAW_URL"/installer_prep.sh
-sudo chmod +x installer_prep.sh && ./installer_prep.sh
-exit "$?"  # Uses the exit code passed by 'installer_prep.sh'.
+curl -O "$_RAW_URL"/installer-prep
+sudo chmod +x installer-prep && ./installer-prep
+exit "$?"  # Uses the exit code passed by 'installer-prep'.
 
 
 #### End of [ Main ]

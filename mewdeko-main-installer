@@ -10,7 +10,7 @@
 #### [ Variables ]
 
 
-# Store process id of 'mewdeko_main_installer.sh', in case it needs to be manually
+# Store process id of 'mewdeko-main-installer', in case it needs to be manually
 # killed by a sub/child script.
 #export _MEWDEKO_MAIN_INSTALLER_PID=$$
 ## To be exported.
@@ -40,7 +40,7 @@ _STOP_SERVICE() {
     ####
     # Function Info: Stops Mewdeko's service.
     #
-    # Parameters:
+    # Arguments:
     #   $1 - optional
     #       True when the function should output text indicating if the service has been
     #       stopped or is currently not running.
@@ -76,7 +76,7 @@ _WATCH_SERVICE_LOGS() {
     # Function Info: Output additional information to go along with the output of the
     #                function '_FOLLOW_SERVICE_LOGS'.
     #
-    # Parameters:
+    # Arguments:
     #   $1 - required
     #       Indicates if the function was called from one of the runner scripts or from
     #       within the main installer.
@@ -107,7 +107,7 @@ exit_code_actions() {
     # Function Info: Depending on the return/exit code from any of the executed scripts,
     #                perform the corresponding/appropriate actions.
     #
-    # Parameters:
+    # Arguments:
     #   $1 - required
     #       Return/exit code.
     ####
@@ -241,8 +241,8 @@ while true; do
         ## Option 5.
         option_five_disabled=true
         option_five_text="${_GREY}${option_five_text}${disabled_option_v2}${_NC}"
-    ## Options 2 and 3 remain enabled, if 'MewdekoRun.sh' exists.
-    elif [[ -f MewdekoRun.sh ]]; then
+    ## Options 2 and 3 remain enabled, if 'MewdekoRun' exists.
+    elif [[ -f MewdekoRun ]]; then
         ## Option 5 remains enabled, if Mewdeko's service is running.
         if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
             run_mode_status=" ${_GREEN}(Running in this mode)${_NC}"
@@ -263,10 +263,10 @@ while true; do
         fi
 
         ## If Mewdeko is running in the background with auto restart...
-        if grep -q '_code_name_="MewdekoRunAR"' MewdekoRun.sh; then
+        if grep -q '_code_name_="MewdekoRunAR"' MewdekoRun; then
             option_three_text="${option_three_text}${run_mode_status}"
         ## If Mewdeko is running in the background...
-        elif grep -q '_code_name_="MewdekoRun"' MewdekoRun.sh; then
+        elif grep -q '_code_name_="MewdekoRun"' MewdekoRun; then
             option_two_text="${option_two_text}${run_mode_status}"
         fi
     ## Options 2 and 3 remained enabled, but option 5 becomes disabled.
@@ -299,14 +299,14 @@ while true; do
             export _MEWDEKO_SERVICE_NAME
             export _MEWDEKO_SERVICE_STATUS
 
-            _DOWNLOAD_SCRIPT "mewdeko_latest_installer.sh" "true"
+            _DOWNLOAD_SCRIPT "mewdeko-latest-installer" "true"
             clear -x
-            ./mewdeko_latest_installer.sh || exit_code_actions "$?"
+            ./mewdeko-latest-installer || exit_code_actions "$?"
 
             # TODO: Figure out way to kill previous execution of the installer, possibly
             #       an array of PIDs and the 'clean_up()' function. This way, cleaning
             #       up and exiting text doesn't print duplicates.
-            # Execute the newly downloaded version of 'installer_prep.sh', so that all
+            # Execute the newly downloaded version of 'installer-prep', so that all
             # changes are applied.
             exec "$_INSTALLER_PREP"
             ;;
@@ -325,7 +325,7 @@ while true; do
             export -f _WATCH_SERVICE_LOGS
             export -f _FOLLOW_SERVICE_LOGS
 
-            _DOWNLOAD_SCRIPT "mewdeko_runner.sh"
+            _DOWNLOAD_SCRIPT "mewdeko-runner"
             clear -x
 
             # If option 2 was executed...
@@ -339,7 +339,7 @@ while true; do
             fi
 
             read -rp "Press [Enter] to begin."
-            ./mewdeko_runner.sh || exit_code_actions "$?"
+            ./mewdeko-runner || exit_code_actions "$?"
             clear -x
             ;;
         4)
@@ -362,9 +362,9 @@ while true; do
             clear -x
             ;;
         6)
-            _DOWNLOAD_SCRIPT "prereqs_installer.sh"
+            _DOWNLOAD_SCRIPT "prereqs-installer"
             clear -x
-            ./prereqs_installer.sh || exit_code_actions "$?"
+            ./prereqs-installer || exit_code_actions "$?"
             clear -x
             ;;
         7)

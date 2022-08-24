@@ -12,7 +12,7 @@ install_prereqs() {
     # Function Info: Install required packages and dependencies needed by Mewdeko, on
 	#                all compatible Linux distributions, besides Debian 9.
 	#
-    # Parameters:
+    # Arguments:
     # 	$1 - required
     #       Distribution name.
     # 	$2 - required
