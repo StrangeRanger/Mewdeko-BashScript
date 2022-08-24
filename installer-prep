@@ -138,7 +138,7 @@ clean_up() {
     # Function Info: Cleanly exit the installer by removing files that aren't required
     #                unless the installer is currently running.
     #
-    # Parameters:
+    # Arguments:
     #   $1 - required
     #       Exit status code.
     #   $2 - required
@@ -189,7 +189,7 @@ _DOWNLOAD_SCRIPT() {
     # Function Info: Download the specified script and modify it's execution
     #                permissions.
     #
-    # Parameters:
+    # Arguments:
     #   $1 - required
     #       Name of script to download.
     #   $2 - optional
