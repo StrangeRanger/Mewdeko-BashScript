@@ -6,7 +6,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- Officially supports Linux Mint 21
+
+### Changed
+
+- ⚠️ Renamed all of the scripts and removed their extension `.sh`.
+  - `installer_prep.sh` has been modified to easily transition between the change.
 - Revert some if statements to fix possible SC2015 problems.
+- When new version of 'linuxAIO' is found, wait for user input before downloading the latest version.
+
+### Removed
+
+- ⚠️ Support for the following have been removed:
+  - Debian 9      (due to end of life)
+  - Linux Mint 19 (due to end of active support)
+
+### Fixed
+
+- Incorrectly used variables when identifying distro version.
+- Dotnet SDK not installing/being removed due to a [change made by Microsoft](https://github.com/dotnet/core/issues/7699).
 
 ## [v1.0.1] - 2022-07-20
 
