@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# 'linuxAIO' acts as the intermediary between the system Mewdeko is being hosted on
-# and 'installer-prep'. To prevent any conflicts with updates to the installer, this
-# script has as little code as deemed necessary.
+# 'linuxAIO' acts as the intermediary between the system Mewdeko is being hosted on and
+# 'installer-prep'. To prevent any conflicts with updates to the installer, this script
+# has as little code as deemed necessary.
 #
 # README: Because this script remains on the user's system, any changes to the code that
 #         are pushed to github, are never applied to the version on the user's system.
@@ -23,8 +23,8 @@
 #### ~~~ THESE VARIABLES CAN BE MODIFIED BY THE END-USER ~~~
 ####
 #### Whenever the installer retrieves the newest version of 'linuxAIO', all modified
-#### variables, with the exception of $installer_repo and $_FILES_TO_BACK_UP, will be
-#### applied to the new version of this script.
+#### variables, with the exception of $installer_repo, will be applied to the new
+#### version of this script.
 
 
 # The repository containing all of the scripts used by the installer.
@@ -32,7 +32,8 @@
 # The only time that this variable should be modified, is if you have created a fork of
 # the repo and plan on making your own modifications to the installer.
 #
-# Format: installer_repo="[github username]/[repository name]"
+# Format:  installer_repo="[github username]/[repository name]"
+# Default: "StrangeRanger/Mewdeko-BashScript"
 installer_repo="StrangeRanger/Mewdeko-BashScript"
 
 # The branch of $installer_repo that the installer will download its scripts from.
@@ -46,6 +47,13 @@ installer_branch="main"
 
 # The branch/tag, of Mewdeko's official repo, that the installer will download the bot
 # from.
+#
+# IMPORTANT: Using a branch/tag containing code older than the one currently on your
+#            system, increases the likelihood of failed builds due to incompatible
+#            changes in the code/files coppied from the current to the newly downloaded
+#            version. For this, and other reasons, it's generally not recommended to
+#            to modify $_MEWDEKO_INSTALL_VERSION. This is especially true when it comes
+#            to a difference in major versions, such as v3 and v4.
 #
 # Options:
 #   main  = Latest version (the master/main branch)
@@ -61,10 +69,9 @@ export _MEWDEKO_INSTALL_VERSION="main"
 #### [[ General Variables ]]
 
 
-# Revision number of this script.
-# Refer to the 'README' note at the beginning of this file for more information.
-export _LINUXAIO_REVISION=2
-# The URL to the raw code of a script that is specified by the other scripts.
+# 'linuxAIO' revision number.
+export _LINUXAIO_REVISION=3
+# The URL to the raw code of a specified script.
 export _RAW_URL="https://raw.githubusercontent.com/$installer_repo/$installer_branch"
 
 
