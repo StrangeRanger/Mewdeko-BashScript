@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - ⚠️ Support for the following have been removed:
   - Debian 9      (due to end of life)
   - Linux Mint 19 (due to end of active support)
+- Removed code that is no longer applicable, due to other changes.
 
 ### Fixed
 
