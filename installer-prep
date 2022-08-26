@@ -12,9 +12,9 @@
 #### [ Exported and/or Globally Used Variables ]
 
 
-# Revision number of 'linuxAIO'.
-# Refer to the 'README' note at the beginning of 'linuxAIO' for more information.
-current_linuxAIO_revision=2
+# 'linuxAIO' revision number. Refer to the 'README' note at the beginning of 'linuxAIO'
+# for more information.
+current_linuxAIO_revision=3
 # Name of the main installer script.
 main_installer="mewdeko-main-installer"
 
@@ -36,18 +36,6 @@ export _MEWDEKO_REVISION_NUMBER=1
     export _CLRLN="$(printf '\r\033[K')"
 }
 
-## PURPOSE: The '--no-hostname' flag for 'journalctl' only works with systemd 230 and
-##          later. So if systemd is older than 230, $_NO_HOSTNAME will not be created.
-# shellcheck disable=SC2206
-{
-    _SYSTEMD_VERSION_TMP=$(systemd --version)
-    _SYSTEMD_VERSION_TMP=($_SYSTEMD_VERSION_TMP)
-    _SYSTEMD_VERSION=${_SYSTEMD_VERSION_TMP[1]}
-
-    export _SYSTEMD_VERSION
-    ((_SYSTEMD_VERSION >= 230)) && export _NO_HOSTNAME="--no-hostname"
-} 2>/dev/null
-
 
 #### End of [ Exported and/or Globally Used Variables ]
 ########################################################################################
@@ -57,8 +45,11 @@ export _MEWDEKO_REVISION_NUMBER=1
 # shellcheck disable=SC1091
 detect_sys_info() {
     ####
-    # Function Info: Identify the operating system, version number, architecture, bit
-    #                type (32 or 64), etc.
+    # Identify the operating system, version number, architecture, bit type (32 or 64),
+    # etc.
+    #
+    # Arguments:
+    #   None
     ####
 
     if [[ -f /etc/os-release ]]; then
@@ -83,8 +74,11 @@ detect_sys_info() {
 
 linuxAIO_update() {
     ####
-    # Function Info: Download the latest version of 'linuxAIO' if $_LINUXAIO_REVISION
-    #                and $current_linuxAIO_revision aren't of equal value.
+    # Download the latest version of 'linuxAIO' if $_LINUXAIO_REVISION and
+    # $current_linuxAIO_revision aren't of equal value.
+    #
+    # Arguments:
+    #   None
     ####
 
     echo -n "${_YELLOW}You are using an older version of 'linuxAIO'. "
@@ -102,7 +96,8 @@ linuxAIO_update() {
     mewdeko_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO)  # A.2.
     mewdeko_install_version_found="$?"                                              # A.2.
 
-    curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
+    curl -O "$_RAW_URL"/linuxAIO \
+        && sudo chmod +x linuxAIO
 
     echo "Applying existing configurations to the new 'linuxAIO'..."
 
@@ -122,8 +117,11 @@ linuxAIO_update() {
 
 unsupported() {
     ####
-    # Function Info: Provide the end-user with the option to continue, even if their
-    #                system isn't officially supported.
+    # Provide the end-user with the option to continue, even if their system isn't
+    # officially supported.
+    #
+    # Arguments:
+    #   None
     ####
 
     echo "${_RED}Your operating system/Linux Distribution is not OFFICIALLY supported" \
@@ -142,8 +140,8 @@ unsupported() {
 
 clean_up() {
     ####
-    # Function Info: Cleanly exit the installer by removing files that aren't required
-    #                unless the installer is currently running.
+    # Cleanly exit the installer by removing files that aren't required unless the
+    # installer is currently running.
     #
     # Arguments:
     #   $1 - required
@@ -155,7 +153,7 @@ clean_up() {
     ####
 
     # Files to be removed.
-    local installer_files=("installer-prep" "prereqs-installer" "mewdeko-runner"
+    local installer_files=("installer-prep" "mewdeko-runner" "prereqs-installer"
         "mewdeko-latest-installer" "mewdeko-main-installer")
 
     if [[ $3 = true ]]; then echo -e "\n\nCleaning up..."
@@ -179,7 +177,10 @@ clean_up() {
 
 execute_main_installer() {
     ####
-    # Function Info: Download and execute $main_installer.
+    # Download and execute $main_installer.
+    #
+    # Arguments:
+    #   None
     ####
 
     _DOWNLOAD_SCRIPT "$main_installer" "true"
@@ -193,8 +194,7 @@ execute_main_installer() {
 
 _DOWNLOAD_SCRIPT() {
     ####
-    # Function Info: Download the specified script and modify it's execution
-    #                permissions.
+    # Download the specified script and modify it's execution permissions.
     #
     # Arguments:
     #   $1 - required
