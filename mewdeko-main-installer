@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# The main installer for Linux Distributions.
+# The main installer for Linux.
 #
 # Comment key:
 #   A.1. - Return to prevent further code execution.
@@ -10,14 +10,11 @@
 #### [ Variables ]
 
 
-# Store process id of 'mewdeko-main-installer', in case it needs to be manually
-# killed by a sub/child script.
-#export _MEWDEKO_MAIN_INSTALLER_PID=$$
 ## To be exported.
 _MEWDEKO_SERVICE_NAME="mewdeko.service"
 _MEWDEKO_SERVICE="/etc/systemd/system/$_MEWDEKO_SERVICE_NAME"
 
-## Indicates which major version of Dotnet and Java (minimum) is required.
+## Indicates which major version of .NET and Java (minimum) is required.
 req_dotnet_version=6
 req_min_java_version=11
 
@@ -29,8 +26,10 @@ req_min_java_version=11
 
 _GET_SERVICE_STATUS() {
     ####
-    # Function Info: Store the status of Mewdeko's service, inside of
-    #                $_MEWDEKO_SERVICE_STATUS.
+    # Store the status of Mewdeko's service, inside of $_MEWDEKO_SERVICE_STATUS.
+    #
+    # Arguments:
+    #   None
     ####
 
     _MEWDEKO_SERVICE_STATUS=$(systemctl is-active "$_MEWDEKO_SERVICE_NAME")
@@ -38,7 +37,7 @@ _GET_SERVICE_STATUS() {
 
 _STOP_SERVICE() {
     ####
-    # Function Info: Stops Mewdeko's service.
+    # Stops Mewdeko's service.
     #
     # Arguments:
     #   $1 - optional
@@ -62,19 +61,22 @@ _STOP_SERVICE() {
 
 _FOLLOW_SERVICE_LOGS() {
     ####
-    # Function Info: Display the logs from 'mewdeko.server' as they are created.
+    # Display the logs from 'mewdeko.server' as they are created.
+    #
+    # Arguments:
+    #   None
     ####
 
     (
         trap 'exit 130' SIGINT
-        sudo journalctl -f -u "$_MEWDEKO_SERVICE_NAME"  | ccze -A
+        sudo journalctl --no-hostname -f -u "$_MEWDEKO_SERVICE_NAME"  | ccze -A
     )
 }
 
 _WATCH_SERVICE_LOGS() {
     ####
-    # Function Info: Output additional information to go along with the output of the
-    #                function '_FOLLOW_SERVICE_LOGS'.
+    # Output additional information to go along with the output of the function
+    # '_FOLLOW_SERVICE_LOGS'.
     #
     # Arguments:
     #   $1 - required
@@ -104,8 +106,8 @@ _WATCH_SERVICE_LOGS() {
 
 exit_code_actions() {
     ####
-    # Function Info: Depending on the return/exit code from any of the executed scripts,
-    #                perform the corresponding/appropriate actions.
+    # Depending on the return/exit code from any of the executed scripts, perform the
+    # corresponding/appropriate actions.
     #
     # Arguments:
     #   $1 - required
@@ -120,7 +122,10 @@ exit_code_actions() {
 
 hash_ccze() {
     ####
-    # Function Info: Return whether or not 'ccze' is installed.
+    # Return whether or not 'ccze' is installed.
+    #
+    # Arguments:
+    #   None
     ####
 
     hash ccze &>/dev/null && ccze_installed=true \
@@ -129,7 +134,10 @@ hash_ccze() {
 
 disabled_reasons() {
     ####
-    # Function Info: Provide the reason(s) for why one or more options are disabled.
+    # Provide the reason(s) for why one or more options are disabled.
+    #
+    # Arguments:
+    #   None
     ####
 
     echo "${_CYAN}Reasons for the disabled option:"
@@ -163,7 +171,7 @@ disabled_reasons() {
 #### [ Main ]
 
 
-printf "%sWelcome to the Mewdeko installer\n\n" "$_CLRLN"
+printf "%sWelcome to the Mewdeko installer menu\n\n" "$_CLRLN"
 
 while true; do
     ####################################################################################
@@ -195,13 +203,13 @@ while true; do
 
 
     if hash dotnet &>/dev/null; then
-        ## Dotnet version.
+        ## .NET version.
         dotnet_version=$(dotnet --version)     # Version: x.x.x
         dotnet_version=${dotnet_version//.*/}  # Version: x
     fi
 
     if hash java &>/dev/null; then
-        ## Java version
+        ## Java version.
         java_version=$(javac -version | awk '{print $2}')  # Version: x.x.x
         java_version=${java_version//.*/}                  # Version: x
     fi
