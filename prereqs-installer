@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# Install all of the packages and dependencies required for Mewdeko to run on Linux
-# distributions.
+# Install the packages and dependencies required for Mewdeko to run on Linux.
 #
 ########################################################################################
 #### [ Functions ]
@@ -9,8 +8,8 @@
 
 install_prereqs() {
     ####
-    # Function Info: Install required packages and dependencies needed by Mewdeko, on
-	#                all compatible Linux distributions, besides Debian 9.
+    # Install the packages and dependencies required by Mewdeko, on all compatible
+    # Linux distributions.
 	#
     # Arguments:
     # 	$1 - required
@@ -20,7 +19,7 @@ install_prereqs() {
     #   $3 - required
     #       OpenJDK version.
     #   $4 - optional
-    #       True if dotnet preferences must be set.
+    #       True if .NET preferences must be set.
     ####
 
     echo "Installing .NET Core..."
@@ -29,7 +28,7 @@ install_prereqs() {
     sudo dpkg -i packages-microsoft-prod.deb
     sudo rm -f packages-microsoft-prod.deb
 
-    ### TODO: Provide better comments to explain this section
+    ## Ensure that .NET SDK is correctly installed on specific versions of Linux.
     if [[ $4 = true ]]; then
         if hash dotnet &>/dev/null && [[ ! $(dotnet --version &>/dev/null) ]]; then
             echo "${_YELLOW}While the .NET runtime is installed, the .NET SDK is not${_NC}"
@@ -71,8 +70,11 @@ install_prereqs() {
 
 unsupported() {
     ####
-    # Function Info: Informs the end-user that their system is not supported by the
-	#				 automatic installation of the prerequisites.
+    # Informs the end-user that their system is not supported by the automatic
+    # installation of the prerequisites.
+    #
+    # Arguments:
+    #   None
     ####
 
     echo "${_RED}The installer does not support the automatic installation and setup" \
