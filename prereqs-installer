@@ -30,7 +30,7 @@ install_prereqs() {
 
     ## Ensure that .NET SDK is correctly installed on specific versions of Linux.
     if [[ $4 = true ]]; then
-        if hash dotnet &>/dev/null && [[ ! $(dotnet --version &>/dev/null) ]]; then
+        if (hash dotnet &>/dev/null && [[ ! $(dotnet --version) ]]) &>/dev/null; then
             echo "${_YELLOW}While the .NET runtime is installed, the .NET SDK is not${_NC}"
             echo "Uninstalling existing .NET Core 6.0 installation..."
             sudo apt remove dotnet-sdk-6.0 -y

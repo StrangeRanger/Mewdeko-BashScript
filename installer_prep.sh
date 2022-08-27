@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# Acts as a transition script from linuxAIO revision 36 to 37. During these changes,
-# many of the files were renamed and had the file extension ('.sh') removed.
+# Acts as a transition script from linuxAIO revision 2 to 3. During these changes, many
+# of the files were renamed and had the file extension ('.sh') removed.
 #
 ########################################################################################
 #### [ Variables ]
@@ -37,8 +37,8 @@ esac
 ## be set in 'linuxAIO'.
 installer_branch=$(grep '^installer_branch=.*' linuxAIO.sh)
 installer_branch_found="$?"
-nadeko_install_version=$(grep '^export _NADEKO_INSTALL_VERSION=.*' linuxAIO.sh)
-nadeko_install_version_found="$?"
+mewdeko_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO.sh)
+mewdeko_install_version_found="$?"
 
 
 #### End of [ Variables ]
@@ -47,12 +47,14 @@ nadeko_install_version_found="$?"
 
 custom_dotnet() {
     ####
-    # Function Info: Ensure that dotnet is set up to work with 'packages.microsoft.com'.
-    #                For more information, please visit
-    #                https://github.com/dotnet/core/issues/7699.
+    # Ensure that .NET is set up to work with 'packages.microsoft.com'. For more
+    # information, please visit https://github.com/dotnet/core/issues/7699.
+    #
+    # Arguments:
+    #   None
     ####
 
-    if hash dotnet &>/dev/null && [[ ! $(dotnet --version &>/dev/null) ]]; then
+    if (hash dotnet &>/dev/null && [[ ! $(dotnet --version) ]]) &>/dev/null; then
         echo "${yellow}While the .NET runtime is installed, the .NET SDK is not${nc}"
         echo "Uninstalling existing .NET Core 6.0 installation..."
         sudo apt remove dotnet-sdk-6.0 -y
@@ -113,12 +115,13 @@ echo "Applying existing configurations to 'linuxAIO'..."
 ## Set $installer_branch inside of 'linuxAIO'.
 [[ $installer_branch_found = 0 ]] \
     && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO
-## Set $nadeko_install_version inside of 'linuxAIO'.
-[[ $nadeko_install_version_found = 0 ]] \
-    && sed -i "s/^export _NADEKO_INSTALL_VERSION=.*/$nadeko_install_version/" linuxAIO
+
+## Set $mewdeko_install_version inside of 'linuxAIO'.
+[[ $mewdeko_install_version_found = 0 ]] \
+    && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdeko_install_version/" linuxAIO
 
 echo "Cleaning up..."
-[[ -f MewdekoRun.sh ]]      && mv MewdekoRun.sh MewdekoRun
+[[ -f MewdekoRun.sh ]]     && mv MewdekoRun.sh MewdekoRun
 [[ -f installer-prep ]]    && rm installer-prep
 [[ -f installer_prep.sh ]] && rm installer_prep.sh
 
