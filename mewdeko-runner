@@ -3,7 +3,7 @@
 # Start Mewdeko in a specified run mode.
 #
 # Comment key:
-#   A.1. - Used in conjunction with the 'systemctl' command.
+#   A.1. - Used in conjunction with 'systemctl'.
 #   B.1. - Used in the text output.
 #
 ########################################################################################
@@ -28,7 +28,7 @@ systemd_version=${systemd_version_tmp[1]}
 ##          version 246 of systemd.
 ## The contents of Mewdeko's service.
 if ((systemd_version >= 246)); then
-    mewdeko_service_content="[Unit]
+    service_content="[Unit]
 Description=Mewdeko service
 After=network.target
 StartLimitIntervalSec=60
@@ -48,7 +48,7 @@ SyslogIdentifier=Mewdeko
 [Install]
 WantedBy=multi-user.target"
 else
-    mewdeko_service_content="[Unit]
+    service_content="[Unit]
 Description=Mewdeko service
 After=network.target
 StartLimitIntervalSec=60
@@ -76,25 +76,25 @@ fi
 
 
 # Check if the service exists.
-if [[ -f $_MEWDEKO_SERVICE ]]; then echo "Updating '$_MEWDEKO_SERVICE_NAME'..."
-else                                echo "Creating '$_MEWDEKO_SERVICE_NAME'..."
+if [[ -f $_SERVICE ]]; then echo "Updating '$_SERVICE_NAME'..."
+else                        echo "Creating '$_SERVICE_NAME'..."
 fi
 
 {
     # Create/update the service.
-    echo "$mewdeko_service_content" | sudo tee "$_MEWDEKO_SERVICE" &>/dev/null \
+    echo "$service_content" | sudo tee "$_SERVICE" &>/dev/null \
         && sudo systemctl daemon-reload
 } || {
-    echo "${_RED}Failed to create '$_MEWDEKO_SERVICE_NAME'" >&2
+    echo "${_RED}Failed to create '$_SERVICE_NAME'" >&2
     echo "${_CYAN}This service must exist for Mewdeko to work${_NC}"
     read -rp "Press [Enter] to return to the installer menu"
     exit 3
 }
 
 ## Disable/enable the service.
-echo "$upper '$_MEWDEKO_SERVICE_NAME'..."
-sudo systemctl "$lower" "$_MEWDEKO_SERVICE_NAME" || {
-    echo "${_RED}Failed to $lower '$_MEWDEKO_SERVICE_NAME'" >&2
+echo "$upper '$_SERVICE_NAME'..."
+sudo systemctl "$lower" "$_SERVICE_NAME" || {
+    echo "${_RED}Failed to $lower '$_SERVICE_NAME'" >&2
     echo "${_CYAN}This service must be ${lower}d in order to use this run mode${_NC}"
     read -rp "Press [Enter] to return to the installer menu"
     exit 3
@@ -166,18 +166,18 @@ else
 fi
 
 ## Restart the service if it is currently running.
-if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
-    echo "Restarting '$_MEWDEKO_SERVICE_NAME'..."
-    sudo systemctl restart "$_MEWDEKO_SERVICE_NAME" || {
-        echo "${_RED}Failed to restart '$_MEWDEKO_SERVICE_NAME'${_NC}" >&2
+if [[ $_SERVICE_STATUS = "active" ]]; then
+    echo "Restarting '$_SERVICE_NAME'..."
+    sudo systemctl restart "$_SERVICE_NAME" || {
+        echo "${_RED}Failed to restart '$_SERVICE_NAME'${_NC}" >&2
         read -rp "Press [Enter] to return to the installer menu"
         exit 3
     }
 ## Start the service if it is NOT currently running.
 else
-    echo "Starting '$_MEWDEKO_SERVICE_NAME'..."
-    sudo systemctl start "$_MEWDEKO_SERVICE_NAME" || {
-        echo "${_RED}Failed to start '$_MEWDEKO_SERVICE_NAME'${_NC}" >&2
+    echo "Starting '$_SERVICE_NAME'..."
+    sudo systemctl start "$_SERVICE_NAME" || {
+        echo "${_RED}Failed to start '$_SERVICE_NAME'${_NC}" >&2
         read -rp "Press [Enter] to return to the installer menu"
         exit 3
     }
