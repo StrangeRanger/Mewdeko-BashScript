@@ -6,22 +6,21 @@
 #### [ Functions ]
 
 
+########
+# Install the packages and dependencies required by Mewdeko, on all compatible
+# Linux distributions.
+#
+# Arguments:
+# 	$1 - required
+#       Distribution name.
+# 	$2 - required
+#       Distribution version.
+#   $3 - required
+#       OpenJDK version.
+#   $4 - optional
+#       True if .NET preferences must be set.
+########
 install_prereqs() {
-    ####
-    # Install the packages and dependencies required by Mewdeko, on all compatible
-    # Linux distributions.
-	#
-    # Arguments:
-    # 	$1 - required
-    #       Distribution name.
-    # 	$2 - required
-    #       Distribution version.
-    #   $3 - required
-    #       OpenJDK version.
-    #   $4 - optional
-    #       True if .NET preferences must be set.
-    ####
-
     echo "Installing .NET Core..."
     ## Microsoft package signing key.
     curl -O https://packages.microsoft.com/config/"$1"/"$2"/packages-microsoft-prod.deb
@@ -35,29 +34,21 @@ install_prereqs() {
             echo "Uninstalling existing .NET Core 6.0 installation..."
             sudo apt remove dotnet-sdk-6.0 -y
             sudo apt autoremove -y
+        fi
 
-            if [[ ! -f /etc/apt/preferences.d/custom-dotnet.pref ]]; then
-                echo "Upating prefered .NET Core install method..."
-
-                {
-                    echo -e "Explanation: https://github.com/dotnet/core/issues/7699" \
-                        "\nPackage: *" \
-                        "\nPin: origin \"packages.microsoft.com\"" \
-                        "\nPin-Priority: 1001" | sudo tee /etc/apt/preferences.d/custom-dotnet.pref
-                } || {
-                    echo "${_RED}Failed to create" \
-                        "'/etc/apt/preferences.d/custom-dotnet.pref'${_NC}" >&2
-                    exit 1
-                }
-
-                echo "Reinstalling .NET Core..."
-            fi
+        if [[ ! -f /etc/apt/preferences.d/custom-dotnet.pref ]]; then
+            echo "Upating prefered .NET Core install method..."
+            echo -e "Explanation: https://github.com/dotnet/core/issues/7699" \
+                "\nPackage: *" \
+                "\nPin: origin \"packages.microsoft.com\"" \
+                "\nPin-Priority: 1001" | sudo tee /etc/apt/preferences.d/custom-dotnet.pref \
+                || _STDERR "Failed to create '/etc/apt/preferences.d/custom-dotnet.pref'" "1"
+            echo "Reinstalling .NET Core..."
         fi
     fi
 
     ## Install the SDK.
-    sudo apt-get update \
-        && sudo apt-get install -y dotnet-sdk-6.0
+    sudo apt-get update && sudo apt-get install -y dotnet-sdk-6.0
 
     ## Install Java.
     echo "Installing '$3'..."
@@ -68,15 +59,14 @@ install_prereqs() {
     sudo apt-get install redis-server git ccze apt-transport-https -y
 }
 
+########
+# Inform the end-user that their system is not supported by the automatic installation
+# of the prerequisites.
+#
+# Arguments:
+#   None
+########
 unsupported() {
-    ####
-    # Informs the end-user that their system is not supported by the automatic
-    # installation of the prerequisites.
-    #
-    # Arguments:
-    #   None
-    ####
-
     echo "${_RED}The installer does not support the automatic installation and setup" \
         "of Mewdeko's prerequisites for your OS: $_DISTRO $_VER ${_ARCH}${_NC}"
     read -rp "Press [Enter] to return to the installer menu"
@@ -94,7 +84,7 @@ read -rp "We will now install Mewdeko's prerequisites. Press [Enter] to continue
 if [[ $_DISTRO = "ubuntu" ]]; then
     case "$_VER" in
         22.04)       install_prereqs "ubuntu" "$_VER" "openjdk-17-jdk" "true" ;;
-        18.04|20.04) install_prereqs "ubuntu" "$_VER" "openjdk-17-jdk" ;;
+        20.04|18.04) install_prereqs "ubuntu" "$_VER" "openjdk-17-jdk" ;;
         *)           unsupported ;;
     esac
 elif [[ $_DISTRO = "debian" ]]; then
@@ -107,7 +97,7 @@ elif [[ $_DISTRO = "linuxmint" ]]; then
     case "$_SVER" in
         21) install_prereqs "ubuntu" "22.04" "openjdk-17-jdk" "true" ;;
         20) install_prereqs "ubuntu" "20.04" "openjdk-17-jdk" ;;
-        *)     unsupported ;;
+        *)  unsupported ;;
     esac
 fi
 
