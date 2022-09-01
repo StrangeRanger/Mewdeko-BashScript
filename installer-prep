@@ -22,7 +22,7 @@ main_installer="mewdeko-main-installer"
 # number. Instead of only being used to represent the relationship between this script
 # and 'linuxAIO', it represents major changes to the installer that requires a change in
 # behavior that would otherwise result in conflict with older verisons of the script.
-export _MEWDEKO_REVISION_NUMBER=1
+export _REVISION_NUMBER=1
 
 ## Modify output text color.
 # shellcheck disable=SC2155
@@ -42,17 +42,15 @@ export _MEWDEKO_REVISION_NUMBER=1
 #### [ Functions ]
 
 
-# shellcheck disable=SC1091
+########
+# Identify the operating system, version number, architecture, bit type (32 or 64), etc.
+#
+# Arguments:
+#   None
+########
 detect_sys_info() {
-    ####
-    # Identify the operating system, version number, architecture, bit type (32 or 64),
-    # etc.
-    #
-    # Arguments:
-    #   None
-    ####
-
     if [[ -f /etc/os-release ]]; then
+        # shellcheck disable=SC1091
         . /etc/os-release
         _DISTRO="$ID"
         _VER="$VERSION_ID"  # Version: x.x.x...
@@ -72,32 +70,30 @@ detect_sys_info() {
     esac
 }
 
+########
+# Download the latest version of 'linuxAIO' if $_LINUXAIO_REVISION and
+# $current_linuxAIO_revision aren't of equal value.
+#
+# Arguments:
+#  None
+########
 linuxAIO_update() {
-    ####
-    # Download the latest version of 'linuxAIO' if $_LINUXAIO_REVISION and
-    # $current_linuxAIO_revision aren't of equal value.
-    #
-    # Arguments:
-    #   None
-    ####
-
     echo -n "${_YELLOW}You are using an older version of 'linuxAIO'. "
     read -rp "Press [Enter] to download the latest version of 'linuxAIO'.${_NC}"
     echo "Downloading latest 'linuxAIO'..."
 
-    ## Save the values of the current Configuration Variables specified in
-    ## 'linuxAIO', to be set in the new 'linuxAIO'.
+    ## Save the values of the current Configuration Variables specified in 'linuxAIO',
+    ## to be set in the new 'linuxAIO'.
     local installer_branch                                    # A.1.
     local installer_branch_found                              # A.1.
     installer_branch=$(grep '^installer_branch=.*' linuxAIO)  # A.1.
     installer_branch_found="$?"	                              # A.1.
-    local mewdeko_install_version                                                   # A.2.
-    local mewdeko_install_version_found                                             # A.2.
-    mewdeko_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO)  # A.2.
-    mewdeko_install_version_found="$?"                                              # A.2.
+    local bot_install_version                                                   # A.2.
+    local bot_install_version_found                                             # A.2.
+    bot_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO)  # A.2.
+    bot_install_version_found="$?"                                              # A.2.
 
-    curl -O "$_RAW_URL"/linuxAIO \
-        && sudo chmod +x linuxAIO
+    curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
 
     echo "Applying existing configurations to the new 'linuxAIO'..."
 
@@ -105,25 +101,24 @@ linuxAIO_update() {
     [[ $installer_branch_found = 0 ]] \
         && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO
 
-    ## Set $mewdeko_install_version inside of the new 'linuxAIO'.
-    [[ $mewdeko_install_version_found = 0 ]] \
-        && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdeko_install_version/" linuxAIO
+    ## Set $bot_install_version inside of the new 'linuxAIO'.
+    [[ $bot_install_version_found = 0 ]] \
+        && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$bot_install_version/" linuxAIO
 
-    echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO'" \
-        "and applied changes to the newest version of 'linuxAIO'${_NC}"
+    echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO' and" \
+        "applied changes to the newest version of 'linuxAIO'${_NC}"
 
     clean_up "0" "Exiting" "true"
 }
 
+########
+# Provide the end-user with the option to continue, even if their system isn't
+# officially supported.
+#
+# Arguments:
+#   None
+########
 unsupported() {
-    ####
-    # Provide the end-user with the option to continue, even if their system isn't
-    # officially supported.
-    #
-    # Arguments:
-    #   None
-    ####
-
     echo "${_RED}Your operating system/Linux Distribution is not OFFICIALLY supported" \
         "for the installation, setup, and/or use of Mewdeko" >&2
     echo "${_YELLOW}WARNING: By continuing, you accept that unexpected behaviors" \
@@ -138,20 +133,19 @@ unsupported() {
     esac
 }
 
+########
+# Cleanly exit the installer by removing files that aren't required unless the installer
+# is currently running.
+#
+# Arguments:
+#   $1 - required
+#       Exit status code.
+#   $2 - required
+#       Output text.
+#   $3 - optional
+#       True if 'Cleaning up...' should be printed with two new-line symbols.
+########
 clean_up() {
-    ####
-    # Cleanly exit the installer by removing files that aren't required unless the
-    # installer is currently running.
-    #
-    # Arguments:
-    #   $1 - required
-    #       Exit status code.
-    #   $2 - required
-    #       Output text.
-    #   $3 - optional
-    #       True if 'Cleaning up...' should be printed with two new-line symbols.
-    ####
-
     # Files to be removed.
     local installer_files=("installer-prep" "mewdeko-runner" "prereqs-installer"
         "mewdeko-latest-installer" "mewdeko-main-installer")
@@ -160,10 +154,7 @@ clean_up() {
     else                     echo -e "\nCleaning up..."
     fi
 
-    cd "$_WORKING_DIR" || {
-        echo "${_RED}Failed to move to project root directory${_NC}" >&2
-        exit 1
-    }
+    cd "$_WORKING_DIR" || _STDERR "Failed to move to project root directory" "1"
 
     [[ -d Mewdeko_tmp ]] && rm -rf Mewdeko_tmp
 
@@ -175,14 +166,13 @@ clean_up() {
     exit "$1"
 }
 
+########
+# Download and execute $main_installer.
+#
+# Arguments:
+#   None
+########
 execute_main_installer() {
-    ####
-    # Download and execute $main_installer.
-    #
-    # Arguments:
-    #   None
-    ####
-
     _DOWNLOAD_SCRIPT "$main_installer" "true"
     ./mewdeko-main-installer
     clean_up "$?" "Exiting"
@@ -192,20 +182,40 @@ execute_main_installer() {
 #### [[ Functions To Be Exported ]]
 
 
+########
+# Download the specified script and modify it's execution permissions.
+#
+# Arguments:
+#   $1 - required - ANY
+#       Name of script to download.
+#   $2 - optional - true
+#       True if the script shouldn't output text indicating $1 is being downloaded.
+########
 _DOWNLOAD_SCRIPT() {
-    ####
-    # Download the specified script and modify it's execution permissions.
-    #
-    # Arguments:
-    #   $1 - required
-    #       Name of script to download.
-    #   $2 - optional
-    #       True if the script shouldn't output text indicating $1 is being downloaded.
-    ####
-
     [[ $2 = true ]] && printf "Downloading '%s'..." "$1"
     curl -O -s "$_RAW_URL"/"$1"
     sudo chmod +x "$1"
+}
+
+########
+# Simplify steps to output an error message, and if desired, exit the script.
+#
+# Arguments:
+#   $1 - required
+#       Error message.
+#   $2 - optional
+#       If provided, exit with the provided value.
+#   $3 - optional
+#       If provided, output an additional message.
+#   $4 - optional
+#       If provided, output an additional message and require the end-user to press
+#       [Enter] to continue.
+########
+_STDERR() {
+    echo "${_RED}$1${_NC}" >&2
+    [[ $3 ]] && echo -e "$3"
+    #[[ $4 ]] && read -rp "$4"
+    [[ $2 ]] && exit "$2"
 }
 
 
@@ -254,7 +264,7 @@ clear -x
 
 detect_sys_info
 export _DISTRO _SVER _VER _ARCH
-export -f _DOWNLOAD_SCRIPT
+export -f _DOWNLOAD_SCRIPT _STDERR
 
 # Use $_DISTRO if $pname is unset or null...
 echo "SYSTEM INFO
@@ -264,21 +274,21 @@ Distro: ${pname:=$_DISTRO}
 Distro Version: $_VER
 "
 
-### Check if the operating system is supported by Mewdeko and installer.
+### Check if the operating system is supported by Mewdeko and the installer.
 if [[ $bits = 64 ]]; then
     if [[ $_DISTRO = "ubuntu" ]]; then
         case "$_VER" in
-            18.04|20.04|22.04) execute_main_installer ;;
+            22.04|20.04|18.04) execute_main_installer ;;
             *)                 unsupported ;;
         esac
     elif [[ $_DISTRO = "debian" ]]; then
         case "$_SVER" in
-            10|11) execute_main_installer ;;
+            11|10) execute_main_installer ;;
             *)     unsupported ;;
         esac
     elif [[ $_DISTRO = "linuxmint" ]]; then
         case "$_SVER" in
-            20|21) execute_main_installer ;;
+            21|20) execute_main_installer ;;
             *)     unsupported ;;
         esac
     else
