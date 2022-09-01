@@ -12,14 +12,15 @@
 #### [ Variables ]
 
 
-mewdeko_service_active=false
+export DOTNET_CLI_TELEMETRY_OPTOUT=1  # Used when compiling code.
+
+service_is_active=false
 current_creds="Mewdeko/src/Mewdeko/credentials.json"
 new_creds="Mewdeko_tmp/Mewdeko/src/Mewdeko/credentials.json"
 current_database="Mewdeko/src/Mewdeko/bin/Release/net6.0/data/Mewdeko.db"
 new_database="Mewdeko_tmp/Mewdeko/src/Mewdeko/bin/Release/net6.0/data/Mewdeko.db"
 current_data="Mewdeko/src/Mewdeko/data"
 new_data="Mewdeko_tmp/Mewdeko/src/Mewdeko/data"
-export DOTNET_CLI_TELEMETRY_OPTOUT=1  # Used when compiling code.
 
 
 #### End of [ Variables ]
@@ -34,8 +35,8 @@ read -rp "We will now download/update Mewdeko. Press [Enter] to begin."
 
 
 ## Stop the service if it's currently running.
-if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
-    mewdeko_service_active=true
+if [[ $_SERVICE_STATUS = "active" ]]; then
+    service_is_active=true
     _STOP_SERVICE
 fi
 
@@ -47,44 +48,32 @@ fi
 
 ## Create a temporary folder to download Mewdeko into.
 mkdir Mewdeko_tmp
-cd Mewdeko_tmp || {
-    echo "${_RED}Failed to change working directory${_NC}" >&2
-    exit 1
-}
+cd Mewdeko_tmp || _STDERR "Failed to change working directory" "1"
 
 echo "Downloading Mewdeko into 'Mewdeko_tmp'..."
-git clone -b "$_MEWDEKO_INSTALL_VERSION" --recursive --depth 1 https://github.com/Sylveon76/Mewdeko || {
-    echo "${_RED}Failed to download Mewdeko${_NC}" >&2
-    exit 1
-}
+git clone -b "$_MEWDEKO_INSTALL_VERSION" --recursive --depth 1 https://github.com/Sylveon76/Mewdeko \
+    || _STDERR "Failed to download Mewdeko" "1"
 
 ## A.1.
 if [[ -d /tmp/NuGetScratch ]]; then
     echo "Modifying ownership of '/tmp/NuGetScratch'..."
-    sudo chown -R "$USER":"$USER" /tmp/NuGetScratch || {
-        echo "${_RED}Failed to to modify the ownership of '/tmp/NuGetScratch'${_NC}" >&2
-        exit 1
-    }
+    sudo chown -R "$USER":"$USER" /tmp/NuGetScratch \
+        || _STDERR "Failed to to modify the ownership of '/tmp/NuGetScratch'" "1"
 fi
 
 ## A.1.
 if [[ -d  /home/$USER/.nuget ]]; then
     echo "Modifying ownership of '/home/$USER/.nuget'..."
-    sudo chown -R "$USER":"$USER" /home/"$USER"/.nuget || {
-        echo "${_RED}Failed to to modify the ownership of '/home/$USER/.nuget'...${_NC}" >&2
-        exit 1
-    }
+    sudo chown -R "$USER":"$USER" /home/"$USER"/.nuget \
+        || _STDERR "Failed to to modify the ownership of '/home/$USER/.nuget'..." "1"
 fi
 
 echo "Building Mewdeko..."
-{
-    cd Mewdeko/src/Mewdeko \
-        && dotnet build -c Release \
-        && cd "$_WORKING_DIR"
-} || {
-    echo "${_RED}Failed to build Mewdeko${_NC}" >&2
-    exit 1
-}
+# shellcheck disable=SC2015
+cd Mewdeko/src/Mewdeko \
+    && dotnet build -c Release \
+    && cd "$_WORKING_DIR" \
+    || _STDERR "Failed to build Mewdeko" "1"
 
 ## Move credentials, database, and other data to the new version of Mewdeko.
 if [[ -d Mewdeko_tmp/Mewdeko && -d Mewdeko ]]; then
@@ -95,9 +84,9 @@ if [[ -d Mewdeko_tmp/Mewdeko && -d Mewdeko ]]; then
 
     echo "Copying other data to the new version..."
 
-    ### The end-user will have to manually re-add their strings after each update as
-    ### updates may cause big number of strings to become obsolete, changed, etc.
-    ### However, old user's strings will be backed up as strings_old.
+    #### The end-user will have to manually re-add their strings after each update as
+    #### updates may cause big number of strings to become obsolete, changed, etc.
+    #### However, old user's strings will be backed up as strings_old.
 
     ## Back up new strings to reverse rewrite.
     rm -rf "$new_data"/strings_new &>/dev/null
@@ -126,8 +115,7 @@ if [[ -d Mewdeko_tmp/Mewdeko && -d Mewdeko ]]; then
     rm -rf Mewdeko_old && mv -f Mewdeko Mewdeko_old
 fi
 
-mv Mewdeko_tmp/Mewdeko . \
-    && rmdir Mewdeko_tmp
+mv Mewdeko_tmp/Mewdeko . && rmdir Mewdeko_tmp
 
 
 #### End of [[ Create Backup, Then Update ]]
@@ -137,8 +125,8 @@ mv Mewdeko_tmp/Mewdeko . \
 
 echo -e "\n${_GREEN}Finished downloading/updating Mewdeko${_NC}"
 
-if "$mewdeko_service_active"; then
-    echo "${_CYAN}NOTE: '$_MEWDEKO_SERVICE_NAME' was stopped to update Mewdeko and" \
+if "$service_is_active"; then
+    echo "${_CYAN}NOTE: '$_SERVICE_NAME' was stopped to update Mewdeko and" \
         "needs to be started using one of the run modes in the installer menu${_NC}"
 fi
 
