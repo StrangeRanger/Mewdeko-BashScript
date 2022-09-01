@@ -11,8 +11,8 @@
 
 
 ## To be exported.
-_MEWDEKO_SERVICE_NAME="mewdeko.service"
-_MEWDEKO_SERVICE="/etc/systemd/system/$_MEWDEKO_SERVICE_NAME"
+_SERVICE_NAME="mewdeko.service"
+_SERVICE="/etc/systemd/system/$_SERVICE_NAME"
 
 ## Indicates which major version of .NET and Java (minimum) is required.
 req_dotnet_version=6
@@ -24,122 +24,39 @@ req_min_java_version=11
 #### [ Functions ]
 
 
-_GET_SERVICE_STATUS() {
-    ####
-    # Store the status of Mewdeko's service, inside of $_MEWDEKO_SERVICE_STATUS.
-    #
-    # Arguments:
-    #   None
-    ####
-
-    _MEWDEKO_SERVICE_STATUS=$(systemctl is-active "$_MEWDEKO_SERVICE_NAME")
-}
-
-_STOP_SERVICE() {
-    ####
-    # Stops Mewdeko's service.
-    #
-    # Arguments:
-    #   $1 - optional
-    #       True when the function should output text indicating if the service has been
-    #       stopped or is currently not running.
-    ####
-
-    if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
-        echo "Stopping '$_MEWDEKO_SERVICE_NAME'..."
-        sudo systemctl stop "$_MEWDEKO_SERVICE_NAME" || {
-            echo "${_RED}Failed to stop '$_MEWDEKO_SERVICE_NAME'" >&2
-            echo "${_CYAN}You will need to restart '$_MEWDEKO_SERVICE_NAME' to apply" \
-                "any updates to Mewdeko${_NC}"
-            return 1
-        }
-        [[ $1 = true ]] && echo -e "\n${_GREEN}Mewdeko has been stopped${_NC}"
-    else
-        [[ $1 = true ]] && echo -e "\n${_CYAN}Mewdeko is not currently running${_NC}"
-    fi
-}
-
-_FOLLOW_SERVICE_LOGS() {
-    ####
-    # Display the logs from 'mewdeko.server' as they are created.
-    #
-    # Arguments:
-    #   None
-    ####
-
-    (
-        trap 'exit 130' SIGINT
-        sudo journalctl --no-hostname -f -u "$_MEWDEKO_SERVICE_NAME"  | ccze -A
-    )
-}
-
-_WATCH_SERVICE_LOGS() {
-    ####
-    # Output additional information to go along with the output of the function
-    # '_FOLLOW_SERVICE_LOGS'.
-    #
-    # Arguments:
-    #   $1 - required
-    #       Indicates if the function was called from one of the runner scripts or from
-    #       within the main installer.
-    ####
-
-    if [[ $1 = "runner" ]]; then
-        echo "Displaying '$_MEWDEKO_SERVICE_NAME' startup logs, live..."
-    else
-        echo "Watching '$_MEWDEKO_SERVICE_NAME' logs, live..."
-    fi
-
-    echo "${_CYAN}To stop displaying the startup logs:"
-    echo "1) Press 'Ctrl' + 'C'${_NC}"
-    echo ""
-
-    _FOLLOW_SERVICE_LOGS
-
-    [[ $1 = "runner" ]] && echo -e "\nPlease check the logs above to make sure that" \
-        "there aren't any errors, and if there are, to resolve whatever issue is" \
-        "causing them"
-
-    echo -e "\n"
-    read -rp "Press [Enter] to return to the installer menu"
-}
-
+########
+# Depending on the return/exit code from any of the executed scripts, perform the
+# corresponding/appropriate actions.
+#
+# Arguments:
+#   $1 - required
+#       Return/exit code.
+########
 exit_code_actions() {
-    ####
-    # Depending on the return/exit code from any of the executed scripts, perform the
-    # corresponding/appropriate actions.
-    #
-    # Arguments:
-    #   $1 - required
-    #       Return/exit code.
-    ####
-
     case "$1" in
         3) return 0 ;;
         *) exit "$1" ;;
     esac
 }
 
+########
+# Return whether or not 'ccze' is installed.
+#
+# Arguments:
+#   None
+########
 hash_ccze() {
-    ####
-    # Return whether or not 'ccze' is installed.
-    #
-    # Arguments:
-    #   None
-    ####
-
     hash ccze &>/dev/null && ccze_installed=true \
                           || ccze_installed=false
 }
 
+########
+# Provide the reason(s) for why one or more options are disabled.
+#
+# Arguments:
+#   None
+########
 disabled_reasons() {
-    ####
-    # Provide the reason(s) for why one or more options are disabled.
-    #
-    # Arguments:
-    #   None
-    ####
-
     echo "${_CYAN}Reasons for the disabled option:"
 
     if (! hash dotnet \
@@ -165,6 +82,91 @@ disabled_reasons() {
     echo "$_NC"
 }
 
+########################################################################################
+#### [[ Functions To Be Exported ]]
+
+
+########
+# Store the status of Mewdeko's service, inside of $_SERVICE_STATUS.
+#
+# Arguments:
+#   None
+########
+_GET_SERVICE_STATUS() {
+    _SERVICE_STATUS=$(systemctl is-active "$_SERVICE_NAME")
+}
+
+########
+# Stop Mewdeko's service.
+#
+# Arguments:
+#   $1 - optional
+#       True when the function should output text indicating if the service has been
+#       stopped or is currently not running.
+########
+_STOP_SERVICE() {
+    if [[ $_SERVICE_STATUS = "active" ]]; then
+        echo "Stopping '$_SERVICE_NAME'..."
+        sudo systemctl stop "$_SERVICE_NAME" || {
+            echo "${_RED}Failed to stop '$_SERVICE_NAME'" >&2
+            echo "${_CYAN}You will need to restart '$_SERVICE_NAME' to apply" \
+                "any updates to Mewdeko${_NC}"
+            return 1
+        }
+        [[ $1 = true ]] && echo -e "\n${_GREEN}Mewdeko has been stopped${_NC}"
+    else
+        [[ $1 = true ]] && echo -e "\n${_CYAN}Mewdeko is not currently running${_NC}"
+    fi
+}
+
+########
+# Display the logs from 'mewdeko.server' as they are created.
+#
+# Arguments:
+#   None
+########
+_FOLLOW_SERVICE_LOGS() {
+    (
+        trap 'exit 130' SIGINT
+        sudo journalctl --no-hostname -f -u "$_SERVICE_NAME"  | ccze -A
+    )
+}
+
+########
+# Output additional information to go along with the output of the function
+# '_FOLLOW_SERVICE_LOGS'.
+#
+# Arguments:
+#   $1 - required
+#       Indicates if the function was called from one of the runner scripts or from
+#       within the main installer.
+########
+_WATCH_SERVICE_LOGS() {
+    if [[ $1 = "runner" ]]; then
+        echo "Displaying '$_SERVICE_NAME' startup logs, live..."
+    elif [[ $1 = "option_five" ]]; then
+        echo "Watching '$_SERVICE_NAME' logs, live..."
+    else
+        _STDERR "INTERNAL ERROR: Invalid argument for '_WATCH_SERVICE_LOGS': $1" "4"
+    fi
+
+    echo "${_CYAN}To stop displaying the startup logs:"
+    echo "1) Press 'Ctrl' + 'C'${_NC}"
+    echo ""
+
+    _FOLLOW_SERVICE_LOGS
+
+    [[ $1 = "runner" ]] && echo -e "\nPlease check the logs above to make sure that" \
+        "there aren't any errors, and if there are, to resolve whatever issue is" \
+        "causing them"
+
+    echo -e "\n"
+    read -rp "Press [Enter] to return to the installer menu"
+}
+
+
+#### End of [[ Functions To Be Exported ]]
+########################################################################################
 
 #### End of [ Functions ]
 ########################################################################################
@@ -177,7 +179,7 @@ while true; do
     ####################################################################################
     #### [[ Temporary Variables ]]
     #### The variables below constantly get modified later in the code, and are required
-    #### to be reset everytime the while loop is run through.
+    #### to be reset everytime the while loop starts from the top.
 
 
     ## Disabled option text.
@@ -192,7 +194,7 @@ while true; do
     option_three_text="3. Run Mewdeko in the background with auto restart"
     ## Option 5.
     option_five_disabled=false
-    option_five_text="5. Display '$_MEWDEKO_SERVICE_NAME' logs in follow mode"
+    option_five_text="5. Display '$_SERVICE_NAME' logs in follow mode"
 
 
     #### End of [[ Temporary Variables ]]
@@ -220,7 +222,7 @@ while true; do
     #### [[ Main continued ]]
 
 
-    # Get the current status of $_MEWDEKO_SERVICE_NAME.
+    # Get the current status of $_SERVICE_NAME.
     _GET_SERVICE_STATUS
 
     # Determines if $ccze_installed is true or false, or in otherwords, if ccze is
@@ -242,28 +244,24 @@ while true; do
     ## not installed, or none of the specified directories/files could be found.
     if [[ ! -f Mewdeko/src/Mewdeko/credentials.json \
             || $option_one_disabled = true ]]; then
-        ## Options 2 & 3.
         option_two_and_three_disabled=true
         option_two_text="${_GREY}${option_two_text}${disabled_option}${_NC}"
         option_three_text="${_GREY}${option_three_text}${disabled_option}${_NC}"
-        ## Option 5.
         option_five_disabled=true
         option_five_text="${_GREY}${option_five_text}${disabled_option_v2}${_NC}"
     ## Options 2 and 3 remain enabled, if 'MewdekoRun' exists.
     elif [[ -f MewdekoRun ]]; then
         ## Option 5 remains enabled, if Mewdeko's service is running.
-        if [[ $_MEWDEKO_SERVICE_STATUS = "active" ]]; then
+        if [[ $_SERVICE_STATUS = "active" ]]; then
             run_mode_status=" ${_GREEN}(Running in this mode)${_NC}"
         ## Disable option 5 if Mewdeko's service NOT running.
-        elif [[ $_MEWDEKO_SERVICE_STATUS = "inactive" ]]; then
-            ## Option 5.
+        elif [[ $_SERVICE_STATUS = "inactive" ]]; then
             option_five_disabled=true
             option_five_text="${_GREY}${option_five_text}${disabled_option_v2}${_NC}"
 
             run_mode_status=" ${_YELLOW}(Set up to run in this mode)${_NC}"
         ## Disable option 5.
         else
-            ## Option 5.
             option_five_disabled=true
             option_five_text="${_GREY}${option_five_text}${disabled_option_v2}${_NC}"
 
@@ -279,7 +277,6 @@ while true; do
         fi
     ## Options 2 and 3 remained enabled, but option 5 becomes disabled.
     else
-        ## Option 5.
         option_five_disabled=true
         option_five_text="${_GREY}${option_five_text}${disabled_option_v2}${_NC}"
     fi
@@ -302,10 +299,10 @@ while true; do
                 continue
             fi
 
-            export _MEWDEKO_SERVICE
+            export _SERVICE
             export -f _STOP_SERVICE
-            export _MEWDEKO_SERVICE_NAME
-            export _MEWDEKO_SERVICE_STATUS
+            export _SERVICE_NAME
+            export _SERVICE_STATUS
 
             _DOWNLOAD_SCRIPT "mewdeko-latest-installer" "true"
             clear -x
@@ -327,9 +324,9 @@ while true; do
                 continue
             fi
 
-            export _MEWDEKO_SERVICE
-            export _MEWDEKO_SERVICE_NAME
-            export _MEWDEKO_SERVICE_STATUS
+            export _SERVICE
+            export _SERVICE_NAME
+            export _SERVICE_STATUS
             export -f _WATCH_SERVICE_LOGS
             export -f _FOLLOW_SERVICE_LOGS
 
