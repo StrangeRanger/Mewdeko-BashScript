@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # Acts as a transition script from linuxAIO revision 2 to 3. During these changes, many
-# of the files were renamed and had the file extension ('.sh') removed.
+# of the files were renamed and had their file extension ('.sh') removed.
 #
 ########################################################################################
 #### [ Variables ]
@@ -37,23 +37,23 @@ esac
 ## be set in 'linuxAIO'.
 installer_branch=$(grep '^installer_branch=.*' linuxAIO.sh)
 installer_branch_found="$?"
-mewdeko_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO.sh)
-mewdeko_install_version_found="$?"
+bot_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO.sh)
+bot_install_version_found="$?"
 
 
 #### End of [ Variables ]
 ########################################################################################
 #### [ Functions ]
 
-custom_dotnet() {
-    ####
-    # Ensure that .NET is set up to work with 'packages.microsoft.com'. For more
-    # information, please visit https://github.com/dotnet/core/issues/7699.
-    #
-    # Arguments:
-    #   None
-    ####
 
+########
+# Ensure that .NET is set up to work with 'packages.microsoft.com'. For more
+# information, please visit https://github.com/dotnet/core/issues/7699.
+#
+# Arguments:
+#   None
+########
+custom_dotnet() {
     if (hash dotnet &>/dev/null && [[ ! $(dotnet --version) ]]) &>/dev/null; then
         echo "${yellow}While the .NET runtime is installed, the .NET SDK is not${nc}"
         echo "Uninstalling existing .NET Core 6.0 installation..."
@@ -116,9 +116,9 @@ echo "Applying existing configurations to 'linuxAIO'..."
 [[ $installer_branch_found = 0 ]] \
     && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO
 
-## Set $mewdeko_install_version inside of 'linuxAIO'.
-[[ $mewdeko_install_version_found = 0 ]] \
-    && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$mewdeko_install_version/" linuxAIO
+## Set $bot_install_version inside of 'linuxAIO'.
+[[ $bot_install_version_found = 0 ]] \
+    && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$bot_install_version/" linuxAIO
 
 echo "Cleaning up..."
 [[ -f MewdekoRun.sh ]]     && mv MewdekoRun.sh MewdekoRun
