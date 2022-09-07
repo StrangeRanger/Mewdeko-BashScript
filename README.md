@@ -10,15 +10,15 @@ This is the official installer for [Mewdeko](https://github.com/Pusheon/Mewdeko)
 
 ## Getting Started
 
-### Downloading linuxAIO.sh
+### Downloading linuxAIO
 
-The only script that needs to be manually downloaded to your system is `linuxAIO.sh`. To do this, execute the following set of commands:
+The only script that needs to be manually downloaded to your system is `linuxAIO`. To do this, execute the following set of commands:
 
-`curl -O https://raw.githubusercontent.com/StrangeRanger/Mewdeko-BashScript/main/linuxAIO.sh && sudo chmod +x linuxAIO.sh`
+`curl -O https://raw.githubusercontent.com/StrangeRanger/Mewdeko-BashScript/main/linuxAIO && sudo chmod +x linuxAIO`
 
 ### Usage
 
-To use the installer, execute the following command: `./linuxAIO.sh`
+To use the installer, execute the following command: `./linuxAIO`
 
 If the following command was successfully executed, a menu with the following options (or something very similar) should be displayed:
 
