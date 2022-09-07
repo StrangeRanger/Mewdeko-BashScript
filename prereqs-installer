@@ -31,8 +31,8 @@ install_prereqs() {
     if [[ $4 = true ]]; then
         if (hash dotnet &>/dev/null && [[ ! $(dotnet --version) ]]) &>/dev/null; then
             echo "${_YELLOW}While the .NET runtime is installed, the .NET SDK is not${_NC}"
-            echo "Uninstalling existing .NET Core 6.0 installation..."
-            sudo apt remove dotnet-sdk-6.0 -y
+            echo "Uninstalling existing .NET Core installation..."
+            sudo apt remove -y dotnet-sdk-6.0
             sudo apt autoremove -y
         fi
 
@@ -48,15 +48,15 @@ install_prereqs() {
     fi
 
     ## Install the SDK.
-    sudo apt-get update && sudo apt-get install -y dotnet-sdk-6.0
+    sudo apt update && sudo apt install -y dotnet-sdk-6.0
 
     ## Install Java.
     echo "Installing '$3'..."
-    sudo apt-get install -y "$3"
+    sudo apt install -y "$3"
 
     ## Other prerequisites.
     echo "Installing other prerequisites..."
-    sudo apt-get install redis-server git ccze apt-transport-https -y
+    sudo apt install -y redis-server git ccze apt-transport-https
 }
 
 ########
