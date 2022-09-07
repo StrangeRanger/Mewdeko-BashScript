@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [v1.0.2] - 2022-08-06
+
 ### Added
 
 - Officially supports Linux Mint 21
@@ -74,7 +76,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 Initial working [beta] release.
 
-[unreleased]: https://github.com/StrangeRanger/Mewdeko-BashScript/compare/v1.0.1...HEAD
+[unreleased]: https://github.com/StrangeRanger/Mewdeko-BashScript/compare/v1.0.2...HEAD
+[v1.0.2]: https://github.com/StrangeRanger/Mewdeko-BashScript/releases/tag/v1.0.2
 [v1.0.1]: https://github.com/StrangeRanger/Mewdeko-BashScript/releases/tag/v1.0.1
 [v1.0.0]: https://github.com/StrangeRanger/Mewdeko-BashScript/releases/tag/v1.0.0
 [v1.0.0-beta.1]: https://github.com/StrangeRanger/Mewdeko-BashScript/releases/tag/v1.0.0-beta.1
