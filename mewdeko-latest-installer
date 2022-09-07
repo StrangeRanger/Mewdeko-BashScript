@@ -31,7 +31,7 @@ new_data="Mewdeko_tmp/Mewdeko/src/Mewdeko/data"
 read -rp "We will now download/update Mewdeko. Press [Enter] to begin."
 
 ########################################################################################
-#### [[ Stop service ]]
+#### [[ Stop Service ]]
 
 
 ## Stop the service if it's currently running.
@@ -41,9 +41,9 @@ if [[ $_SERVICE_STATUS = "active" ]]; then
 fi
 
 
-#### End of [[ Stop service ]]
+#### End of [[ Stop Service ]]
 ########################################################################################
-#### [[ Create Backup, Then Update ]]
+#### [[ Create Backup and Update ]]
 
 
 ## Create a temporary folder to download Mewdeko into.
@@ -51,7 +51,7 @@ mkdir Mewdeko_tmp
 cd Mewdeko_tmp || _STDERR "Failed to change working directory" "1"
 
 echo "Downloading Mewdeko into 'Mewdeko_tmp'..."
-git clone -b "$_MEWDEKO_INSTALL_VERSION" --recursive --depth 1 https://github.com/Sylveon76/Mewdeko \
+git clone -b "$_BOT_INSTALL_VERSION" --recursive --depth 1 https://github.com/Sylveon76/Mewdeko \
     || _STDERR "Failed to download Mewdeko" "1"
 
 ## A.1.
@@ -85,7 +85,7 @@ if [[ -d Mewdeko_tmp/Mewdeko && -d Mewdeko ]]; then
     echo "Copying other data to the new version..."
 
     #### The end-user will have to manually re-add their strings after each update as
-    #### updates may cause big number of strings to become obsolete, changed, etc.
+    #### updates may cause a number of strings to become obsolete, changed, etc.
     #### However, old user's strings will be backed up as strings_old.
 
     ## Back up new strings to reverse rewrite.
@@ -118,7 +118,7 @@ fi
 mv Mewdeko_tmp/Mewdeko . && rmdir Mewdeko_tmp
 
 
-#### End of [[ Create Backup, Then Update ]]
+#### End of [[ Create Backup and Update ]]
 ########################################################################################
 #### [[ Clean Up and Present Results ]]
 
