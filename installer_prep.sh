@@ -104,10 +104,10 @@ fi
 
 if   [[ -f linuxAIO.sh ]]; then
     echo "Backing up 'linuxAIO.sh' as 'linuxAIO.sh.old'..."
-    mv linuxAIO.sh linuxAIO.sh.bak
+    mv linuxAIO.sh linuxAIO.sh.old
 elif [[ -f linuxAIO ]]; then
     echo "Backing up 'linuxAIO' as 'linuxAIO.old'..."
-    mv linuxAIO linuxAIO.bak
+    mv linuxAIO linuxAIO.old
 fi
 
 echo "Downloading latest version of 'linuxAIO'..."
