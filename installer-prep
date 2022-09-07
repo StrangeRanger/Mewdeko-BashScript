@@ -83,10 +83,10 @@ linuxAIO_update() {
     if ((_LINUXAIO_REVISION <= 3)); then
         if [[ -f linuxAIO.sh ]]; then
             echo "Backing up 'linuxAIO.sh' as 'linuxAIO.sh.old'..."
-            mv linuxAIO.sh linuxAIO.sh.bak
+            mv linuxAIO.sh linuxAIO.sh.old
         elif [[ -f linuxAIO ]]; then
             echo "Backing up 'linuxAIO' as 'linuxAIO.old'..."
-            mv linuxAIO linuxAIO.bak
+            mv linuxAIO linuxAIO.old
         fi
 
         curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
