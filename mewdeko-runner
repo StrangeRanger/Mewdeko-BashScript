@@ -10,7 +10,7 @@
 #### [ Variables ]
 
 
-### Indicate which actions ('disable' or 'enable') to be performed on Mewdeko's service.
+### Indicate which actions to be performed on Mewdeko's service.
 if [[ $_CODENAME = "MewdekoRun" ]]; then
     lower="disable"    # A.1.
     upper="Disabling"  # B.1.
@@ -24,9 +24,9 @@ systemd_version_tmp=$(systemd --version)
 systemd_version_tmp=($systemd_version_tmp)
 systemd_version=${systemd_version_tmp[1]}
 
-## PURPOSE: 'StandardOutput' and 'StandardError' no longer support 'syslog', starting in
-##          version 246 of systemd.
-## The contents of Mewdeko's service.
+## The contents of NadekoBot's service.
+## NOTE: 'StandardOutput' and 'StandardError' no longer supports 'syslog' starting in
+##       version 246 of systemd.
 if ((systemd_version >= 246)); then
     service_content="[Unit]
 Description=Mewdeko service
