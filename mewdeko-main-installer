@@ -163,7 +163,6 @@ _WATCH_SERVICE_LOGS() {
         "there aren't any errors, and if there are, to resolve whatever issue is" \
         "causing them"
 
-    echo -e "\n"
     read -rp "Press [Enter] to return to the installer menu"
 }
 
