@@ -4,24 +4,19 @@
 # whether or not the system is supported by Mewdeko. Once the system is deemed as
 # supported, the main installer will be downloaded and executed.
 #
-# Comment key:
-#   A.1. - Grouping One
-#   A.2. - Grouping Two
-#
 ########################################################################################
 #### [ Exported and/or Globally Used Variables ]
 
 
-# 'linuxAIO' revision number. Refer to the 'README' note at the beginning of 'linuxAIO'
-# for more information.
-current_linuxAIO_revision=3
+# Refer to the 'README' note at the beginning of 'linuxAIO' for more information.
+current_linuxAIO_revision=4
 # Name of the main installer script.
 main_installer="mewdeko-main-installer"
 
 # Similar to 'current_linuxAIO_revision', expecpt it's used as a more general tracking
 # number. Instead of only being used to represent the relationship between this script
 # and 'linuxAIO', it represents major changes to the installer that requires a change in
-# behavior that would otherwise result in conflict with older verisons of the script.
+# behavior, that would otherwise result in conflict with older verisons of the script.
 export _REVISION_NUMBER=1
 
 ## Modify output text color.
@@ -79,34 +74,52 @@ detect_sys_info() {
 ########
 linuxAIO_update() {
     echo -n "${_YELLOW}You are using an older version of 'linuxAIO'. "
-    read -rp "Press [Enter] to download the latest version of 'linuxAIO'.${_NC}"
-    echo "Downloading latest 'linuxAIO'..."
+    read -rp "Press [Enter] to download the latest version.${_NC}"
+    echo "Downloading latest version of 'linuxAIO'..."
 
-    ## Save the values of the current Configuration Variables specified in 'linuxAIO',
-    ## to be set in the new 'linuxAIO'.
-    local installer_branch                                    # A.1.
-    local installer_branch_found                              # A.1.
-    installer_branch=$(grep '^installer_branch=.*' linuxAIO)  # A.1.
-    installer_branch_found="$?"	                              # A.1.
-    local bot_install_version                                                   # A.2.
-    local bot_install_version_found                                             # A.2.
-    bot_install_version=$(grep '^export _MEWDEKO_INSTALL_VERSION=.*' linuxAIO)  # A.2.
-    bot_install_version_found="$?"                                              # A.2.
+    ## Only download the newest version of 'linuxAIO', as there are some incompatible
+    ## changes to 'linuxAIO' making it difficult or impossible to merge existing
+    ## configurations.
+    if ((_LINUXAIO_REVISION <= 3)); then
+        if [[ -f linuxAIO.sh ]]; then
+            echo "Backing up 'linuxAIO.sh' as 'linuxAIO.sh.old'..."
+            mv linuxAIO.sh linuxAIO.sh.bak
+        elif [[ -f linuxAIO ]]; then
+            echo "Backing up 'linuxAIO' as 'linuxAIO.old'..."
+            mv linuxAIO linuxAIO.bak
+        fi
 
-    curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
+        curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
+        echo "${_CYAN}NOT applying existing configurations to 'linuxAIO'"
+        echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO'.${_NC}"
+    ## Download the newest version of 'linuxAIO' and apply existing changes to it.
+    else
+        ## Save the values of the current Configuration Variables specified in
+        ## 'linuxAIO', to be set in the new 'linuxAIO'.
+        local installer_branch
+        local installer_branch_found
+        installer_branch=$(grep '^installer_branch=.*' linuxAIO)
+        installer_branch_found="$?"
+        local bot_install_version
+        local bot_install_version_found
+        bot_install_version=$(grep '^export _BOT_INSTALL_VERSION=.*' linuxAIO)
+        bot_install_version_found="$?"
 
-    echo "Applying existing configurations to the new 'linuxAIO'..."
+        curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
 
-    ## Set $installer_branch inside of the new 'linuxAIO'.
-    [[ $installer_branch_found = 0 ]] \
-        && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO
+        echo "Applying existing configurations to the new 'linuxAIO'..."
 
-    ## Set $bot_install_version inside of the new 'linuxAIO'.
-    [[ $bot_install_version_found = 0 ]] \
-        && sed -i "s/^export _MEWDEKO_INSTALL_VERSION=.*/$bot_install_version/" linuxAIO
+        # Set $installer_branch inside of the new 'linuxAIO'.
+        [[ $installer_branch_found = 0 ]] \
+            && sed -i "s/^installer_branch=.*/$installer_branch/" linuxAIO
 
-    echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO' and" \
-        "applied changes to the newest version of 'linuxAIO'${_NC}"
+        # Set $bot_install_version inside of the new 'linuxAIO'.
+        [[ $bot_install_version_found = 0 ]] \
+            && sed -i "s/^export _BOT_INSTALL_VERSION=.*/$bot_install_version/" linuxAIO
+
+        echo "${_GREEN}Successfully downloaded the newest version of 'linuxAIO' and" \
+            "applied changes to the newest version of 'linuxAIO'${_NC}"
+    fi
 
     clean_up "0" "Exiting" "true"
 }
@@ -119,8 +132,8 @@ linuxAIO_update() {
 #   None
 ########
 unsupported() {
-    echo "${_RED}Your operating system/Linux Distribution is not OFFICIALLY supported" \
-        "for the installation, setup, and/or use of Mewdeko" >&2
+    echo "${_RED}Your operating system is not OFFICIALLY supported for the" \
+        "installation, setup, and/or use of Mewdeko" >&2
     echo "${_YELLOW}WARNING: By continuing, you accept that unexpected behaviors" \
         "may occur. If you run into any errors or problems with the installation and" \
         "use of the Mewdeko, you are on your own.${_NC}"
@@ -139,7 +152,7 @@ unsupported() {
 #
 # Arguments:
 #   $1 - required
-#       Exit status code.
+#       Exit code.
 #   $2 - required
 #       Output text.
 #   $3 - optional
@@ -154,8 +167,7 @@ clean_up() {
     else                     echo -e "\nCleaning up..."
     fi
 
-    cd "$_WORKING_DIR" || _STDERR "Failed to move to project root directory" "1"
-
+    cd "$_WORKING_DIR" || _STDERR "Failed to move to Mewdeko's root directory" "1"
     [[ -d Mewdeko_tmp ]] && rm -rf Mewdeko_tmp
 
     for file in "${installer_files[@]}"; do
@@ -174,7 +186,7 @@ clean_up() {
 ########
 execute_main_installer() {
     _DOWNLOAD_SCRIPT "$main_installer" "true"
-    ./mewdeko-main-installer
+    ./"$main_installer"
     clean_up "$?" "Exiting"
 }
 
@@ -186,10 +198,10 @@ execute_main_installer() {
 # Download the specified script and modify it's execution permissions.
 #
 # Arguments:
-#   $1 - required - ANY
-#       Name of script to download.
-#   $2 - optional - true
-#       True if the script shouldn't output text indicating $1 is being downloaded.
+#   $1 - required
+#       Name of the script to download.
+#   $2 - optional
+#       True if the script should output text indicating $1 is being downloaded.
 ########
 _DOWNLOAD_SCRIPT() {
     [[ $2 = true ]] && printf "Downloading '%s'..." "$1"
@@ -198,7 +210,7 @@ _DOWNLOAD_SCRIPT() {
 }
 
 ########
-# Simplify steps to output an error message, and if desired, exit the script.
+# Output an error message, and if desired, exit the script.
 #
 # Arguments:
 #   $1 - required
@@ -207,14 +219,10 @@ _DOWNLOAD_SCRIPT() {
 #       If provided, exit with the provided value.
 #   $3 - optional
 #       If provided, output an additional message.
-#   $4 - optional
-#       If provided, output an additional message and require the end-user to press
-#       [Enter] to continue.
 ########
 _STDERR() {
     echo "${_RED}$1${_NC}" >&2
     [[ $3 ]] && echo -e "$3"
-    #[[ $4 ]] && read -rp "$4"
     [[ $2 ]] && exit "$2"
 }
 
@@ -238,13 +246,13 @@ trap 'clean_up "148" "Exiting" "true"' SIGTSTP
 
 
 # If the current 'linuxAIO' revision number is not of equil value of the expected
-# revision number.
+# revision number...
 if [[ $_LINUXAIO_REVISION && $_LINUXAIO_REVISION != "$current_linuxAIO_revision" ]]; then
     linuxAIO_update
     clean_up "0" "Exiting"
 fi
 
-# Change the working directory to the location of the executed scrpt.
+# Change the working directory to the location of the executed script.
 cd "${0%/*}" || {
     echo "${_RED}Failed to change working directory" >&2
     echo "${_CYAN}Change your working directory to that of the executed script${_NC}"
