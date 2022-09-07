@@ -112,12 +112,13 @@ fi
 
 echo "Downloading latest version of 'linuxAIO'..."
 curl -O "$_RAW_URL"/linuxAIO && sudo chmod +x linuxAIO
-echo "${_CYAN}NOT applying existing configurations to the new 'linuxAIO'${_NC}"
+echo "${cyan}NOT applying existing configurations to the new 'linuxAIO'${cyan}"
 
 echo "Cleaning up..."
 [[ -f MewdekoRun.sh ]]     && mv MewdekoRun.sh MewdekoRun
 [[ -f installer-prep ]]    && rm installer-prep
 [[ -f installer_prep.sh ]] && rm installer_prep.sh
+echo "Exiting..."
 
 
 #### End of [[ Update Files ]]
