@@ -52,7 +52,7 @@ installer_branch="main"
 #            system, increases the likelihood of failed builds due to incompatible
 #            changes in the code/files coppied from the current to the newly downloaded
 #            version. For this, and other reasons, it's generally not recommended to
-#            to modify $_MEWDEKO_INSTALL_VERSION. This is especially true when it comes
+#            to modify $_BOT_INSTALL_VERSION. This is especially true when it comes
 #            to a difference in major versions, such as v3 and v4.
 #
 # Options:
@@ -61,7 +61,7 @@ installer_branch="main"
 #           branches)
 #
 # Default: "main"
-export _MEWDEKO_INSTALL_VERSION="main"
+export _BOT_INSTALL_VERSION="main"
 
 
 #### End of [[ Configuration Variables ]]
@@ -70,7 +70,7 @@ export _MEWDEKO_INSTALL_VERSION="main"
 
 
 # 'linuxAIO' revision number.
-export _LINUXAIO_REVISION=3
+export _LINUXAIO_REVISION=4
 # The URL to the raw code of a specified script.
 export _RAW_URL="https://raw.githubusercontent.com/$installer_repo/$installer_branch"
 
@@ -86,7 +86,7 @@ export _RAW_URL="https://raw.githubusercontent.com/$installer_repo/$installer_br
 echo "Downloading the latest installer..."
 curl -O "$_RAW_URL"/installer-prep
 sudo chmod +x installer-prep && ./installer-prep
-exit "$?"  # Uses the exit code passed by 'installer-prep'.
+exit "$?"
 
 
 #### End of [ Main ]
