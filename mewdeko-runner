@@ -24,7 +24,7 @@ systemd_version_tmp=$(systemd --version)
 systemd_version_tmp=($systemd_version_tmp)
 systemd_version=${systemd_version_tmp[1]}
 
-## The contents of NadekoBot's service.
+## The contents of Mewdeko's service.
 ## NOTE: 'StandardOutput' and 'StandardError' no longer supports 'syslog' starting in
 ##       version 246 of systemd.
 if ((systemd_version >= 246)); then

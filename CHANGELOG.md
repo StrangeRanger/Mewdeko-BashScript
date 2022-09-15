@@ -42,7 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Modified traps to provide proper signal exit codes.
     - Example: 128+n where n is the signal number, such as 9 being SIGKILL.
   - Changed exit codes to non-reserved exit codes.
-- NadekoBot daemon uses `journal` for `StandardOutput` and `StandardError`, instead of `syslog`, if systemd version is 246 or later.
+- Mewdeko's daemon uses `journal` for `StandardOutput` and `StandardError`, instead of `syslog`, if systemd version is 246 or later.
 - Checks if `/home/$USER/.nuget` exists before attempting to chown it.
 - Small formatting and style changes.
 - Replaced the use of master with main.
