@@ -1,6 +1,6 @@
 # Mewdeko-BashScript
 
-[![Project Tracker](https://img.shields.io/badge/repo%20status-Project%20Tracker-lightgrey)](https://wiki.randomserver.xyz/en/project-tracker#mewdeko-bashscript)
+[![Project Tracker](https://img.shields.io/badge/repo%20status-Project%20Tracker-lightgrey)](https://wiki.hthompson.dev/en/project-tracker)
 [![Style Guide](https://img.shields.io/badge/code%20style-Style%20Guide-blueviolet)](https://github.com/StrangeRanger/bash-style-guide)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/7433881fd42148dda4e7862bb201d886)](https://www.codacy.com/gh/StrangeRanger/Mewdeko-BashScript/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=StrangeRanger/Mewdeko-BashScript&amp;utm_campaign=Badge_Grade)
 
